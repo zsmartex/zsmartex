@@ -1,0 +1,13 @@
+version: v1
+name: buf.build/zsmartex/zsmartex
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway
+lint:
+  use:
+    - DEFAULT
+    - ENUM_PASCAL_CASE
+  except:
+    - ENUM_VALUE_PREFIX
+    - ENUM_ZERO_VALUE_SUFFIX
+

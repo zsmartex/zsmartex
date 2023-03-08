@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package api.user.v1;
+
+import "common/v1/user.proto";
+import "common/v1/code.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {version: "1.0"};
+  external_docs: {
+    url: "https://github.com/zsmartex/zsmartex";
+    description: "Open source cryptocurrency exchange built by ZSmartex";
+  }
+  schemes: HTTPS;
+};
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string confirm_password = 3 [json_name = "confirm_password"];
+}
+
+message RegisterResponse {
+  common.v1.User user = 1;
+}
+
+message ConfirmRequest {
+  string email = 1;
+  string code = 2;
+}
+
+message ConfirmResponse {
+  common.v1.User user = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2 [json_name = "confirm_password"];
+  string otp_code = 3 [json_name = "otp_code"];
+}
+
+message LoginResponse {
+  common.v1.User user = 1;
+}
+
+message GenerateCodeRegisterRequest {
+  string email = 1;
+}
+
+message GenerateCodeRegisterResponse {}
+
+message GenerateCodeLoginRequest {}
+message GenerateCodeLoginResponse {}
+
+service UserService {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/users"
+      body: "*"
+      response_body: "user"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Register a user"
+      tags: "Users"
+    };
+  };
+  rpc Confirm(ConfirmRequest) returns (ConfirmResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/users/confirm"
+      body: "*"
+      response_body: "user"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Confirm pending user"
+      tags: "Users"
+    };
+  };
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/sessions"
+      body: "*"
+      response_body: "user"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Login to user service"
+      tags: "Users"
+    };
+  };
+  rpc GenerateCodeRegister(GenerateCodeRegisterRequest) returns (GenerateCodeRegisterResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/users/generate_code"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Generate register code"
+      tags: "Users"
+    };
+  };
+  rpc GenerateCodeLogin(GenerateCodeLoginRequest) returns (GenerateCodeLoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/identity/sessions/generate_code"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Generate login code"
+      tags: "Users"
+    };
+  };
+}

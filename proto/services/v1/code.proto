@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package services.code.v1;
+
+import "common/v1/code.proto";
+
+message GenerateCodeRequest {
+  common.v1.CodeType code_type = 1 [json_name = "code_type"];
+}
+
+message GenerateCodeResponse {}
+
+service CodeService {
+  rpc GenerateCode(GenerateCodeRequest) returns (GenerateCodeResponse);
+}

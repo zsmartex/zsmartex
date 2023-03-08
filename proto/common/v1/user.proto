@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package common.v1;
+
+enum MemberRole {
+  MEMBER = 0;
+  ADMIN = 1;
+  SUPERADMIN = 2;
+}
+
+enum MemberState {
+  PENDING = 0;
+  ACTIVE = 1;
+  DELETED = 2;
+  BANNED = 3;
+  LOCKED = 4;
+}
+
+message User {
+  string id = 1;
+  string uid = 2;
+  string email = 3;
+  string username = 4;
+  bool otp = 5;
+  MemberRole role = 6;
+  MemberState state = 7;
+  string referral_uid = 8 [json_name = "referral_uid"];
+}
