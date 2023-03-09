@@ -91,7 +91,6 @@ service UserService {
   rpc GenerateCodeRegister(GenerateCodeRegisterRequest) returns (GenerateCodeRegisterResponse) {
     option (google.api.http) = {
       post: "/api/v1/identity/users/generate_code"
-      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Generate register code"
@@ -101,7 +100,6 @@ service UserService {
   rpc GenerateCodeLogin(GenerateCodeLoginRequest) returns (GenerateCodeLoginResponse) {
     option (google.api.http) = {
       post: "/api/v1/identity/sessions/generate_code"
-      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Generate login code"

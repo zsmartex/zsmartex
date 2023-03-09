@@ -1,6 +1,0 @@
-[submodule "proto/gorm"]
-	path = proto/gorm
-	url = https://github.com/infobloxopen/protoc-gen-gorm
-[submodule "proto-deps/gorm"]
-	path = proto-deps/gorm
-	url = https://github.com/infobloxopen/protoc-gen-gorm

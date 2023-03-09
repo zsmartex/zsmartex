@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package services.code.v1;
+package services.v1;
 
 import "common/v1/code.proto";
 

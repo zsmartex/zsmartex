@@ -7,7 +7,7 @@ lint:
   use:
     - DEFAULT
     - ENUM_PASCAL_CASE
+    - ONEOF_LOWER_SNAKE_CASE
   except:
     - ENUM_VALUE_PREFIX
     - ENUM_ZERO_VALUE_SUFFIX
-

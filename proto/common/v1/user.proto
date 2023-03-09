@@ -2,13 +2,16 @@ syntax = "proto3";
 
 package common.v1;
 
-enum MemberRole {
+import "options/gorm.proto";
+import "google/protobuf/timestamp.proto";
+
+enum UserRole {
   MEMBER = 0;
   ADMIN = 1;
   SUPERADMIN = 2;
 }
 
-enum MemberState {
+enum UserState {
   PENDING = 0;
   ACTIVE = 1;
   DELETED = 2;
@@ -16,13 +19,25 @@ enum MemberState {
   LOCKED = 4;
 }
 
+message UserData {
+  bool phone = 1;
+  bool profile = 2;
+}
+
 message User {
-  string id = 1;
-  string uid = 2;
-  string email = 3;
+  option (gorm.opts) = {
+    ormable: true,
+    json: true
+  };
+  int64 id = 1 [(gorm.field).tag = {primary_key: true auto_increment: true}];
+  string uid = 2 [(gorm.field).tag = { serializer: "uid" index: "idx_users_on_uid" unique: true }];
+  string email = 3 [(gorm.field).tag = { serializer: "email" }];
   string username = 4;
   bool otp = 5;
-  MemberRole role = 6;
-  MemberState state = 7;
+  UserRole role = 6;
+  UserState state = 7;
   string referral_uid = 8 [json_name = "referral_uid"];
+  UserData data = 9;
+  google.protobuf.Timestamp created_at = 10 [json_name = "created_at"];
+  google.protobuf.Timestamp updated_at = 11 [json_name = "updated_at"];
 }
