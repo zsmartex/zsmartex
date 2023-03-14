@@ -9,3 +9,7 @@ deps:
     owner: grpc-ecosystem
     repository: grpc-gateway
     commit: a1ecdc58eccd49aa8bea2a7a9022dc27
+  - remote: buf.build
+    owner: zsmartex
+    repository: protoc-gen-gorm
+    commit: 3cd8872bb1af4fdc822d6a194f7aaea1

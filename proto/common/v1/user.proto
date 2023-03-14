@@ -2,7 +2,8 @@ syntax = "proto3";
 
 package common.v1;
 
-import "options/gorm.proto";
+import "gorm/options.proto";
+import "gorm/types.proto";
 import "google/protobuf/timestamp.proto";
 
 enum UserRole {
@@ -22,6 +23,7 @@ enum UserState {
 message UserData {
   bool phone = 1;
   bool profile = 2;
+  string referral_uid = 3 [json_name = "referral_uid"];
 }
 
 message User {
@@ -29,15 +31,15 @@ message User {
     ormable: true,
     json: true
   };
-  int64 id = 1 [(gorm.field).tag = {primary_key: true auto_increment: true}];
-  string uid = 2 [(gorm.field).tag = { serializer: "uid" index: "idx_users_on_uid" unique: true }];
-  string email = 3 [(gorm.field).tag = { serializer: "email" }];
-  string username = 4;
+  int64 id = 1 [(gorm.field).tag = { primary_key: true auto_increment: true }];
+  string uid = 2 [(gorm.field).tag = { index: "idx_users_on_uid" unique: true }];
+  string email = 3 [(gorm.field).tag = { index: "idx_users_on_email" unique: true }];
+  string username = 4 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
   bool otp = 5;
   UserRole role = 6;
   UserState state = 7;
-  string referral_uid = 8 [json_name = "referral_uid"];
-  UserData data = 9;
-  google.protobuf.Timestamp created_at = 10 [json_name = "created_at"];
-  google.protobuf.Timestamp updated_at = 11 [json_name = "updated_at"];
+  UserData data = 8;
+  google.protobuf.Timestamp created_at = 9 [json_name = "created_at"];
+  google.protobuf.Timestamp updated_at = 10 [json_name = "updated_at"];
+  gorm.Decimal price = 11 [(gorm.field).nilable = true];
 }
