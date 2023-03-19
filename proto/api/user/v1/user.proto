@@ -2,10 +2,12 @@ syntax = "proto3";
 
 package api.user.v1;
 
-import "common/v1/user.proto";
-import "common/v1/code.proto";
+import "common/user/v1/user.proto";
+import "common/code/v1/code.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/zsmartex/zsmartex/proto/api/user/v1;userv1";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {version: "1.0"};
@@ -23,7 +25,7 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  common.v1.User user = 1;
+  common.user.v1.User user = 1;
 }
 
 message ConfirmRequest {
@@ -32,7 +34,7 @@ message ConfirmRequest {
 }
 
 message ConfirmResponse {
-  common.v1.User user = 1;
+  common.user.v1.User user = 1;
 }
 
 message LoginRequest {
@@ -42,7 +44,7 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  common.v1.User user = 1;
+  common.user.v1.User user = 1;
 }
 
 message GenerateCodeRegisterRequest {

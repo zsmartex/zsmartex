@@ -27,7 +27,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/v1User"
+              "$ref": "#/definitions/commonuserv1User"
             }
           },
           "default": {
@@ -83,7 +83,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/v1User"
+              "$ref": "#/definitions/commonuserv1User"
             }
           },
           "default": {
@@ -116,7 +116,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/v1User"
+              "$ref": "#/definitions/commonuserv1User"
             }
           },
           "default": {
@@ -174,16 +174,40 @@
     }
   },
   "definitions": {
-    "gormDecimal": {
+    "commonuserv1User": {
       "type": "object",
       "properties": {
-        "value": {
-          "type": "string",
-          "format": "int64"
+        "id": {
+          "$ref": "#/definitions/rpcIdentifier"
         },
-        "scale": {
-          "type": "integer",
-          "format": "int32"
+        "uid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "otp": {
+          "type": "boolean"
+        },
+        "role": {
+          "$ref": "#/definitions/v1UserRole"
+        },
+        "state": {
+          "$ref": "#/definitions/v1UserState"
+        },
+        "data": {
+          "$ref": "#/definitions/v1UserData"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -195,6 +219,26 @@
         }
       },
       "additionalProperties": {}
+    },
+    "rpcIdentifier": {
+      "type": "string",
+      "format": "string",
+      "properties": {
+        "applicationName": {
+          "type": "string",
+          "title": "An application identifier that will be used among\nother infrastructure services to identify the application"
+        },
+        "resourceType": {
+          "type": "string",
+          "title": "An application specific type name of a resource"
+        },
+        "resourceId": {
+          "type": "string",
+          "title": "An application specific resource identity of a resource"
+        }
+      },
+      "description": "atlas.api.identifier",
+      "title": "A number of application services require a mechanism to\nencode the identity of a particular resource across applications.\nThe resource identifiers consist of the application ID,\nan application-defined resource type,\nand an application-defined ID for that resource"
     },
     "rpcStatus": {
       "type": "object",
@@ -229,7 +273,7 @@
       "type": "object",
       "properties": {
         "user": {
-          "$ref": "#/definitions/v1User"
+          "$ref": "#/definitions/commonuserv1User"
         }
       }
     },
@@ -257,7 +301,7 @@
       "type": "object",
       "properties": {
         "user": {
-          "$ref": "#/definitions/v1User"
+          "$ref": "#/definitions/commonuserv1User"
         }
       }
     },
@@ -279,49 +323,7 @@
       "type": "object",
       "properties": {
         "user": {
-          "$ref": "#/definitions/v1User"
-        }
-      }
-    },
-    "v1User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "username": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "otp": {
-          "type": "boolean"
-        },
-        "role": {
-          "$ref": "#/definitions/v1UserRole"
-        },
-        "state": {
-          "$ref": "#/definitions/v1UserState"
-        },
-        "data": {
-          "$ref": "#/definitions/v1UserData"
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updated_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "price": {
-          "$ref": "#/definitions/gormDecimal"
+          "$ref": "#/definitions/commonuserv1User"
         }
       }
     },
@@ -342,22 +344,22 @@
     "v1UserRole": {
       "type": "string",
       "enum": [
-        "MEMBER",
-        "ADMIN",
-        "SUPERADMIN"
+        "USER_ROLE_MEMBER",
+        "USER_ROLE_ADMIN",
+        "USER_ROLE_SUPERADMIN"
       ],
-      "default": "MEMBER"
+      "default": "USER_ROLE_MEMBER"
     },
     "v1UserState": {
       "type": "string",
       "enum": [
-        "PENDING",
-        "ACTIVE",
-        "DELETED",
-        "BANNED",
-        "LOCKED"
+        "USER_STATE_PENDING",
+        "USER_STATE_ACTIVE",
+        "USER_STATE_DELETED",
+        "USER_STATE_BANNED",
+        "USER_STATE_LOCKED"
       ],
-      "default": "PENDING"
+      "default": "USER_STATE_PENDING"
     }
   },
   "externalDocs": {

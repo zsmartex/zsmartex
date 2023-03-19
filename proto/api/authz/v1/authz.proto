@@ -2,9 +2,11 @@ syntax = "proto3";
 
 package api.authz.v1;
 
-import "common/v1/user.proto";
+import "common/user/v1/user.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/zsmartex/zsmartex/proto/api/authz/v1;authzv1";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {version: "1.0"};

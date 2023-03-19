@@ -2,10 +2,13 @@ syntax = "proto3";
 
 package services.v1;
 
-import "common/v1/code.proto";
+import "common/code/v1/code.proto";
+
+option go_package = "github.com/zsmartex/zsmartex/proto/services/v1;servicesv1";
 
 message GenerateCodeRequest {
-  common.v1.CodeType code_type = 1 [json_name = "code_type"];
+  common.code.v1.CodeType code_type = 1;
+  common.code.v1.CodeCategory code_category = 2;
 }
 
 message GenerateCodeResponse {}

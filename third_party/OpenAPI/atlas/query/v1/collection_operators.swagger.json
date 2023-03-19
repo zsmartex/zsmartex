@@ -1,14 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "services/v1/code.proto",
+    "title": "atlas/query/v1/collection_operators.proto",
     "version": "version not set"
   },
-  "tags": [
-    {
-      "name": "CodeService"
-    }
-  ],
   "consumes": [
     "application/json"
   ],
@@ -43,25 +38,6 @@
           }
         }
       }
-    },
-    "v1CodeCategory": {
-      "type": "string",
-      "enum": [
-        "CODE_CATEGORY_LOGIN",
-        "CODE_CATEGORY_REGISTER"
-      ],
-      "default": "CODE_CATEGORY_LOGIN"
-    },
-    "v1CodeType": {
-      "type": "string",
-      "enum": [
-        "CODE_TYPE_LOGIN",
-        "CODE_TYPE_REGISTER"
-      ],
-      "default": "CODE_TYPE_LOGIN"
-    },
-    "v1GenerateCodeResponse": {
-      "type": "object"
     }
   }
 }

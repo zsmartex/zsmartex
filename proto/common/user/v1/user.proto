@@ -1,23 +1,26 @@
 syntax = "proto3";
 
-package common.v1;
+package common.user.v1;
 
 import "gorm/options.proto";
 import "gorm/types.proto";
+import "atlas/resource/v1/resource.proto";
 import "google/protobuf/timestamp.proto";
 
+option go_package = "github.com/zsmartex/zsmartex/proto/common/user/v1;userv1";
+
 enum UserRole {
-  MEMBER = 0;
-  ADMIN = 1;
-  SUPERADMIN = 2;
+  USER_ROLE_MEMBER = 0;
+  USER_ROLE_ADMIN = 1;
+  USER_ROLE_SUPERADMIN = 2;
 }
 
 enum UserState {
-  PENDING = 0;
-  ACTIVE = 1;
-  DELETED = 2;
-  BANNED = 3;
-  LOCKED = 4;
+  USER_STATE_PENDING = 0;
+  USER_STATE_ACTIVE = 1;
+  USER_STATE_DELETED = 2;
+  USER_STATE_BANNED = 3;
+  USER_STATE_LOCKED = 4;
 }
 
 message UserData {
@@ -31,7 +34,7 @@ message User {
     ormable: true,
     json: true
   };
-  int64 id = 1 [(gorm.field).tag = { primary_key: true auto_increment: true }];
+  atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'bigint' primary_key: true auto_increment: true }];
   string uid = 2 [(gorm.field).tag = { index: "idx_users_on_uid" unique: true }];
   string email = 3 [(gorm.field).tag = { index: "idx_users_on_email" unique: true }];
   string username = 4 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
@@ -41,5 +44,4 @@ message User {
   UserData data = 8;
   google.protobuf.Timestamp created_at = 9 [json_name = "created_at"];
   google.protobuf.Timestamp updated_at = 10 [json_name = "updated_at"];
-  gorm.Decimal price = 11 [(gorm.field).nilable = true];
 }
