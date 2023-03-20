@@ -27,7 +27,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/commonuserv1User"
+              "$ref": "#/definitions/v1User"
             }
           },
           "default": {
@@ -83,7 +83,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/commonuserv1User"
+              "$ref": "#/definitions/v1User"
             }
           },
           "default": {
@@ -116,7 +116,7 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/commonuserv1User"
+              "$ref": "#/definitions/v1User"
             }
           },
           "default": {
@@ -174,43 +174,6 @@
     }
   },
   "definitions": {
-    "commonuserv1User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/definitions/rpcIdentifier"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "otp": {
-          "type": "boolean"
-        },
-        "role": {
-          "$ref": "#/definitions/v1UserRole"
-        },
-        "state": {
-          "$ref": "#/definitions/v1UserState"
-        },
-        "data": {
-          "$ref": "#/definitions/v1UserData"
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updated_at": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -273,7 +236,7 @@
       "type": "object",
       "properties": {
         "user": {
-          "$ref": "#/definitions/commonuserv1User"
+          "$ref": "#/definitions/v1User"
         }
       }
     },
@@ -301,7 +264,7 @@
       "type": "object",
       "properties": {
         "user": {
-          "$ref": "#/definitions/commonuserv1User"
+          "$ref": "#/definitions/v1User"
         }
       }
     },
@@ -323,7 +286,44 @@
       "type": "object",
       "properties": {
         "user": {
-          "$ref": "#/definitions/commonuserv1User"
+          "$ref": "#/definitions/v1User"
+        }
+      }
+    },
+    "v1User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/rpcIdentifier"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "otp": {
+          "type": "boolean"
+        },
+        "role": {
+          "$ref": "#/definitions/v1UserRole"
+        },
+        "state": {
+          "$ref": "#/definitions/v1UserState"
+        },
+        "data": {
+          "$ref": "#/definitions/v1UserData"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

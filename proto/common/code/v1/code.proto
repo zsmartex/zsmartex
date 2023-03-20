@@ -20,13 +20,13 @@ enum CodeCategory {
   CODE_CATEGORY_REGISTER = 1;
 }
 
-message User {
+message Code {
   option (gorm.opts) = {
     ormable: true,
     json: true
   };
   atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'bigint' primary_key: true auto_increment: true }];
-  atlas.rpc.Identifier user_id = 2;
+  atlas.rpc.Identifier user_id = 2 ;
   string code = 3;
   CodeType type = 4;
   CodeCategory category = 5;
@@ -38,5 +38,5 @@ message User {
   bytes data = 11 [(gorm.field).nilable = true];
   google.protobuf.Timestamp validated_at = 12 [(gorm.field).nilable = true];
   google.protobuf.Timestamp expired_at = 13;
-  User user = 14;
+  common.user.v1.User user = 14 [(gorm.field).belongs_to = {}];
 }
