@@ -1,11 +1,7 @@
 version: v1
 managed:
   enabled: true
-  go_package_prefix:
-    default: github.com/zsmartex/zsmartex/proto
-    except:
-      - buf.build/googleapis/googleapis
-      - buf.build/grpc-ecosystem/grpc-gateway
+  optimize_for: SPEED
 plugins:
   - remote: buf.build/protocolbuffers/plugins/go:v1.28.0-1
     out: proto
@@ -18,6 +14,9 @@ plugins:
     opt: paths=source_relative
   - plugin: gorm
     out: proto
-    opt: engine=postgres,paths=source_relative,enums=string,gateway=true,serializer=json
+    opt: engine=postgres,paths=source_relative,enums=string,gateway=true
+  - name: go-enums
+    out: proto
+    opt: paths=source_relative
   - remote: buf.build/grpc-ecosystem/plugins/openapiv2:v2.7.2-1
     out: third_party/OpenAPI

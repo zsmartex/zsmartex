@@ -2,14 +2,62 @@ syntax = "proto3";
 
 package services.v1;
 
-import "common/v1/code.proto";
+import "common/code/v1/code.proto";
 
-message GenerateCodeRequest {
-  common.v1.CodeType code_type = 1 [json_name = "code_type"];
+option go_package = "github.com/zsmartex/zsmartex/proto/services/v1;servicesv1";
+
+message GetPendingCodeRequest {
+  string uid = 1;
+  common.code.v1.CodeType code_type = 2;
+  common.code.v1.CodeCategory code_category = 3;
 }
 
-message GenerateCodeResponse {}
+message GetPendingCodeResponse {
+  common.code.v1.Code code = 1;
+}
+
+message GenerateCodeRequest {
+  string uid = 1;
+  common.code.v1.CodeType code_type = 2;
+  common.code.v1.CodeCategory code_category = 3;
+  bytes data = 4;
+}
+
+message GenerateCodeResponse {
+  common.code.v1.Code code = 1;
+}
+
+message CheckCodeRequest {
+  string uid = 1;
+  common.code.v1.CodeType code_type = 2;
+  common.code.v1.CodeCategory code_category = 3;
+}
+
+message CheckCodesRequest {
+  repeated CheckCodeRequest codes = 1;
+}
+
+message CheckCodesResponse {
+  repeated common.code.v1.Code codes = 1;
+}
+
+message ValidateCodeRequest {
+  string uid = 1;
+  common.code.v1.CodeType code_type = 2;
+  common.code.v1.CodeCategory code_category = 3;
+}
+
+message ValidateCodesRequest {
+  repeated ValidateCodeRequest codes = 1;
+}
+
+message ValidateCodesResponse {
+  repeated common.code.v1.Code codes = 1;
+}
 
 service CodeService {
+  rpc GetPendingCode(GetPendingCodeRequest) returns (GetPendingCodeResponse);
   rpc GenerateCode(GenerateCodeRequest) returns (GenerateCodeResponse);
+  rpc CheckCodes(CheckCodesRequest) returns (CheckCodesResponse);
+  rpc ValidateCodes(ValidateCodesRequest) returns (ValidateCodesResponse);
 }

@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package common.v1;
-
-enum CodeType {
-  LOGIN = 0;
-  REGISTER = 1;
-}

@@ -1,0 +1,369 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/user/v1/user.proto",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "UserService"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/identity/sessions": {
+      "post": {
+        "summary": "Login to user service",
+        "operationId": "UserService_Login",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1User"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1LoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/identity/sessions/generate_code": {
+      "post": {
+        "summary": "Generate login code",
+        "operationId": "UserService_GenerateCodeLogin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GenerateCodeLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/identity/users": {
+      "post": {
+        "summary": "Register a user",
+        "operationId": "UserService_Register",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1User"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RegisterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/identity/users/confirm": {
+      "post": {
+        "summary": "Confirm pending user",
+        "operationId": "UserService_Confirm",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/v1User"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ConfirmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v1/identity/users/generate_code": {
+      "post": {
+        "summary": "Generate register code",
+        "operationId": "UserService_GenerateCodeRegister",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GenerateCodeRegisterResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcIdentifier": {
+      "type": "string",
+      "format": "string",
+      "properties": {
+        "applicationName": {
+          "type": "string",
+          "title": "An application identifier that will be used among\nother infrastructure services to identify the application"
+        },
+        "resourceType": {
+          "type": "string",
+          "title": "An application specific type name of a resource"
+        },
+        "resourceId": {
+          "type": "string",
+          "title": "An application specific resource identity of a resource"
+        }
+      },
+      "description": "atlas.api.identifier",
+      "title": "A number of application services require a mechanism to\nencode the identity of a particular resource across applications.\nThe resource identifiers consist of the application ID,\nan application-defined resource type,\nand an application-defined ID for that resource"
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1ConfirmRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ConfirmResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/v1User"
+        }
+      }
+    },
+    "v1GenerateCodeLoginResponse": {
+      "type": "object"
+    },
+    "v1GenerateCodeRegisterResponse": {
+      "type": "object"
+    },
+    "v1LoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "confirm_password": {
+          "type": "string"
+        },
+        "otp_code": {
+          "type": "string"
+        }
+      }
+    },
+    "v1LoginResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/v1User"
+        }
+      }
+    },
+    "v1RegisterRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirm_password": {
+          "type": "string"
+        }
+      }
+    },
+    "v1RegisterResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/v1User"
+        }
+      }
+    },
+    "v1User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/rpcIdentifier"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "otp": {
+          "type": "boolean"
+        },
+        "role": {
+          "$ref": "#/definitions/v1UserRole"
+        },
+        "state": {
+          "$ref": "#/definitions/v1UserState"
+        },
+        "data": {
+          "$ref": "#/definitions/v1UserData"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1UserData": {
+      "type": "object",
+      "properties": {
+        "phone": {
+          "type": "boolean"
+        },
+        "profile": {
+          "type": "boolean"
+        },
+        "referral_uid": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UserRole": {
+      "type": "string",
+      "enum": [
+        "USER_ROLE_MEMBER",
+        "USER_ROLE_ADMIN",
+        "USER_ROLE_SUPERADMIN"
+      ],
+      "default": "USER_ROLE_MEMBER"
+    },
+    "v1UserState": {
+      "type": "string",
+      "enum": [
+        "USER_STATE_PENDING",
+        "USER_STATE_ACTIVE",
+        "USER_STATE_DELETED",
+        "USER_STATE_BANNED",
+        "USER_STATE_LOCKED"
+      ],
+      "default": "USER_STATE_PENDING"
+    }
+  },
+  "externalDocs": {
+    "description": "Open source cryptocurrency exchange built by ZSmartex",
+    "url": "https://github.com/zsmartex/zsmartex"
+  }
+}
