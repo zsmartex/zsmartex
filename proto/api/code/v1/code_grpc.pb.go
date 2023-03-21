@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             (unknown)
-// source: services/v1/code.proto
+// source: api/code/v1/code.proto
 
-package servicesv1
+package codev1
 
 import (
 	context "context"
@@ -38,7 +38,7 @@ func NewCodeServiceClient(cc grpc.ClientConnInterface) CodeServiceClient {
 
 func (c *codeServiceClient) GetPendingCode(ctx context.Context, in *GetPendingCodeRequest, opts ...grpc.CallOption) (*GetPendingCodeResponse, error) {
 	out := new(GetPendingCodeResponse)
-	err := c.cc.Invoke(ctx, "/services.v1.CodeService/GetPendingCode", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.code.v1.CodeService/GetPendingCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *codeServiceClient) GetPendingCode(ctx context.Context, in *GetPendingCo
 
 func (c *codeServiceClient) GenerateCode(ctx context.Context, in *GenerateCodeRequest, opts ...grpc.CallOption) (*GenerateCodeResponse, error) {
 	out := new(GenerateCodeResponse)
-	err := c.cc.Invoke(ctx, "/services.v1.CodeService/GenerateCode", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.code.v1.CodeService/GenerateCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *codeServiceClient) GenerateCode(ctx context.Context, in *GenerateCodeRe
 
 func (c *codeServiceClient) CheckCodes(ctx context.Context, in *CheckCodesRequest, opts ...grpc.CallOption) (*CheckCodesResponse, error) {
 	out := new(CheckCodesResponse)
-	err := c.cc.Invoke(ctx, "/services.v1.CodeService/CheckCodes", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.code.v1.CodeService/CheckCodes", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (c *codeServiceClient) CheckCodes(ctx context.Context, in *CheckCodesReques
 
 func (c *codeServiceClient) ValidateCodes(ctx context.Context, in *ValidateCodesRequest, opts ...grpc.CallOption) (*ValidateCodesResponse, error) {
 	out := new(ValidateCodesResponse)
-	err := c.cc.Invoke(ctx, "/services.v1.CodeService/ValidateCodes", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.code.v1.CodeService/ValidateCodes", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func _CodeService_GetPendingCode_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/services.v1.CodeService/GetPendingCode",
+		FullMethod: "/api.code.v1.CodeService/GetPendingCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CodeServiceServer).GetPendingCode(ctx, req.(*GetPendingCodeRequest))
@@ -138,7 +138,7 @@ func _CodeService_GenerateCode_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/services.v1.CodeService/GenerateCode",
+		FullMethod: "/api.code.v1.CodeService/GenerateCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CodeServiceServer).GenerateCode(ctx, req.(*GenerateCodeRequest))
@@ -156,7 +156,7 @@ func _CodeService_CheckCodes_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/services.v1.CodeService/CheckCodes",
+		FullMethod: "/api.code.v1.CodeService/CheckCodes",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CodeServiceServer).CheckCodes(ctx, req.(*CheckCodesRequest))
@@ -174,7 +174,7 @@ func _CodeService_ValidateCodes_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/services.v1.CodeService/ValidateCodes",
+		FullMethod: "/api.code.v1.CodeService/ValidateCodes",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CodeServiceServer).ValidateCodes(ctx, req.(*ValidateCodesRequest))
@@ -186,7 +186,7 @@ func _CodeService_ValidateCodes_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CodeService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "services.v1.CodeService",
+	ServiceName: "api.code.v1.CodeService",
 	HandlerType: (*CodeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -207,5 +207,5 @@ var CodeService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "services/v1/code.proto",
+	Metadata: "api/code/v1/code.proto",
 }

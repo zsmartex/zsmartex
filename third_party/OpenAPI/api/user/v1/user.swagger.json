@@ -299,9 +299,6 @@
         "uid": {
           "type": "string"
         },
-        "email": {
-          "type": "string"
-        },
         "username": {
           "type": "string"
         },

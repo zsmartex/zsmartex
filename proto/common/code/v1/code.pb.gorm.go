@@ -3,9 +3,6 @@ package codev1
 import (
 	context "context"
 	fmt "fmt"
-	strings "strings"
-	time "time"
-
 	gateway "github.com/infobloxopen/atlas-app-toolkit/gateway"
 	gorm1 "github.com/infobloxopen/atlas-app-toolkit/gorm"
 	resource "github.com/infobloxopen/atlas-app-toolkit/gorm/resource"
@@ -15,22 +12,24 @@ import (
 	field_mask "google.golang.org/genproto/protobuf/field_mask"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	gorm "gorm.io/gorm"
+	strings "strings"
+	time "time"
 )
 
 type CodeORM struct {
-	UserId         *int64      `json:"user_id,omitempty"`
-	Type           string      `json:"type,omitempty"`
-	PhoneIndex     null.Int64  `json:"phone_index,omitempty"`
-	AttemptCount   int64       `json:"attempt_count,omitempty"`
-	ValidatedAt    null.Time   `json:"validated_at,omitempty"`
-	Id             *int64      `gorm:"type:bigint;primaryKey;autoIncrement" json:"id,omitempty"`
 	EmailEncrypted null.String `json:"email_encrypted,omitempty"`
-	EmailIndex     null.Int64  `json:"email_index,omitempty"`
+	AttemptCount   int64       `json:"attempt_count,omitempty"`
+	UserId         *int64      `json:"user_id,omitempty"`
 	Data           null.Bytes  `json:"data,omitempty"`
-	PhoneEncrypted null.String `json:"phone_encrypted,omitempty"`
 	ExpiredAt      *time.Time  `json:"expired_at,omitempty"`
-	User           *v1.UserORM `gorm:"type:jsonb;foreignKey:UserId;references:Id" json:"user,omitempty"`
 	Code           string      `json:"code,omitempty"`
+	Type           string      `json:"type,omitempty"`
+	EmailIndex     null.Int64  `json:"email_index,omitempty"`
+	PhoneEncrypted null.String `json:"phone_encrypted,omitempty"`
+	PhoneIndex     null.Int64  `json:"phone_index,omitempty"`
+	Id             *int64      `gorm:"type:bigint;primaryKey;autoIncrement" json:"id,omitempty"`
+	ValidatedAt    null.Time   `json:"validated_at,omitempty"`
+	User           *v1.UserORM `gorm:"type:jsonb;foreignKey:UserId;references:Id" json:"user,omitempty"`
 	Category       string      `json:"category,omitempty"`
 }
 

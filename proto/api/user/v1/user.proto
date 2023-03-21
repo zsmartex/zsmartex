@@ -18,44 +18,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   schemes: HTTPS;
 };
 
-message RegisterRequest {
-  string email = 1;
-  string password = 2;
-  string confirm_password = 3 [json_name = "confirm_password"];
-}
-
-message RegisterResponse {
-  common.user.v1.User user = 1;
-}
-
-message ConfirmRequest {
-  string email = 1;
-  string code = 2;
-}
-
-message ConfirmResponse {
-  common.user.v1.User user = 1;
-}
-
-message LoginRequest {
-  string email = 1;
-  string password = 2 [json_name = "confirm_password"];
-  string otp_code = 3 [json_name = "otp_code"];
-}
-
-message LoginResponse {
-  common.user.v1.User user = 1;
-}
-
-message GenerateCodeRegisterRequest {
-  string email = 1;
-}
-
-message GenerateCodeRegisterResponse {}
-
-message GenerateCodeLoginRequest {}
-message GenerateCodeLoginResponse {}
-
 service UserService {
   rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
@@ -109,3 +71,41 @@ service UserService {
     };
   };
 }
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string confirm_password = 3 [json_name = "confirm_password"];
+}
+
+message RegisterResponse {
+  common.user.v1.User user = 1;
+}
+
+message ConfirmRequest {
+  string email = 1;
+  string code = 2;
+}
+
+message ConfirmResponse {
+  common.user.v1.User user = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2 [json_name = "confirm_password"];
+  string otp_code = 3 [json_name = "otp_code"];
+}
+
+message LoginResponse {
+  common.user.v1.User user = 1;
+}
+
+message GenerateCodeRegisterRequest {
+  string email = 1;
+}
+
+message GenerateCodeRegisterResponse {}
+
+message GenerateCodeLoginRequest {}
+message GenerateCodeLoginResponse {}

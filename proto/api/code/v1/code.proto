@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package services.v1;
+package api.code.v1;
 
 import "common/code/v1/code.proto";
 
-option go_package = "github.com/zsmartex/zsmartex/proto/services/v1;servicesv1";
+option go_package = "github.com/zsmartex/zsmartex/proto/api/code/v1;codev1";
 
 message GetPendingCodeRequest {
   string uid = 1;

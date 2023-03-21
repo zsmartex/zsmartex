@@ -1,0 +1,271 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/code/v1/code.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "CodeService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcIdentifier": {
+      "type": "string",
+      "format": "string",
+      "properties": {
+        "applicationName": {
+          "type": "string",
+          "title": "An application identifier that will be used among\nother infrastructure services to identify the application"
+        },
+        "resourceType": {
+          "type": "string",
+          "title": "An application specific type name of a resource"
+        },
+        "resourceId": {
+          "type": "string",
+          "title": "An application specific resource identity of a resource"
+        }
+      },
+      "description": "atlas.api.identifier",
+      "title": "A number of application services require a mechanism to\nencode the identity of a particular resource across applications.\nThe resource identifiers consist of the application ID,\nan application-defined resource type,\nand an application-defined ID for that resource"
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CheckCodeRequest": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "codeType": {
+          "$ref": "#/definitions/v1CodeType"
+        },
+        "codeCategory": {
+          "$ref": "#/definitions/v1CodeCategory"
+        }
+      }
+    },
+    "v1CheckCodesResponse": {
+      "type": "object",
+      "properties": {
+        "codes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Code"
+          }
+        }
+      }
+    },
+    "v1Code": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/rpcIdentifier"
+        },
+        "userId": {
+          "$ref": "#/definitions/rpcIdentifier"
+        },
+        "code": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/v1CodeType"
+        },
+        "category": {
+          "$ref": "#/definitions/v1CodeCategory"
+        },
+        "emailEncrypted": {
+          "type": "string"
+        },
+        "emailIndex": {
+          "type": "string",
+          "format": "int64"
+        },
+        "phoneEncrypted": {
+          "type": "string"
+        },
+        "phoneIndex": {
+          "type": "string",
+          "format": "int64"
+        },
+        "attemptCount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "validatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/v1User"
+        }
+      }
+    },
+    "v1CodeCategory": {
+      "type": "string",
+      "enum": [
+        "CODE_CATEGORY_LOGIN",
+        "CODE_CATEGORY_REGISTER"
+      ],
+      "default": "CODE_CATEGORY_LOGIN"
+    },
+    "v1CodeType": {
+      "type": "string",
+      "enum": [
+        "CODE_TYPE_LOGIN",
+        "CODE_TYPE_REGISTER"
+      ],
+      "default": "CODE_TYPE_LOGIN"
+    },
+    "v1GenerateCodeResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/definitions/v1Code"
+        }
+      }
+    },
+    "v1GetPendingCodeResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/definitions/v1Code"
+        }
+      }
+    },
+    "v1User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/rpcIdentifier"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "otp": {
+          "type": "boolean"
+        },
+        "role": {
+          "$ref": "#/definitions/v1UserRole"
+        },
+        "state": {
+          "$ref": "#/definitions/v1UserState"
+        },
+        "data": {
+          "$ref": "#/definitions/v1UserData"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1UserData": {
+      "type": "object",
+      "properties": {
+        "phone": {
+          "type": "boolean"
+        },
+        "profile": {
+          "type": "boolean"
+        },
+        "referral_uid": {
+          "type": "string"
+        }
+      }
+    },
+    "v1UserRole": {
+      "type": "string",
+      "enum": [
+        "USER_ROLE_MEMBER",
+        "USER_ROLE_ADMIN",
+        "USER_ROLE_SUPERADMIN"
+      ],
+      "default": "USER_ROLE_MEMBER"
+    },
+    "v1UserState": {
+      "type": "string",
+      "enum": [
+        "USER_STATE_PENDING",
+        "USER_STATE_ACTIVE",
+        "USER_STATE_DELETED",
+        "USER_STATE_BANNED",
+        "USER_STATE_LOCKED"
+      ],
+      "default": "USER_STATE_PENDING"
+    },
+    "v1ValidateCodeRequest": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "codeType": {
+          "$ref": "#/definitions/v1CodeType"
+        },
+        "codeCategory": {
+          "$ref": "#/definitions/v1CodeCategory"
+        }
+      }
+    },
+    "v1ValidateCodesResponse": {
+      "type": "object",
+      "properties": {
+        "codes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Code"
+          }
+        }
+      }
+    }
+  }
+}

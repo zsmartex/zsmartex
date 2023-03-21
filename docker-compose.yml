@@ -1,1 +1,37 @@
 version: '3.8'
+
+# TODO: add support elasticsearch, questdb, mongodb, temporal and redpanda
+
+services:
+  traefik:
+    image: "traefik:v2.9"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  postgres:
+    image: "postgres:15"
+    ports:
+      - "5432:5432"
+    container_name: "postgres"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=changeme
+
+  redis:
+    image: "redis:7"
+    ports:
+      - "6379:6379"
+    container_name: "redis"
+
+volumes:
+  postgres:
+  redis:

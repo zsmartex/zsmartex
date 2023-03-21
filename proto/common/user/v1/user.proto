@@ -36,12 +36,28 @@ message User {
   };
   atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'bigint' primary_key: true auto_increment: true }];
   string uid = 2 [(gorm.field).tag = { index: "idx_users_on_uid" unique: true }];
-  string email = 3 [(gorm.field).tag = { index: "idx_users_on_email" unique: true }];
-  string username = 4 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
-  bool otp = 5;
-  UserRole role = 6;
-  UserState state = 7;
-  UserData data = 8;
-  google.protobuf.Timestamp created_at = 9 [json_name = "created_at"];
-  google.protobuf.Timestamp updated_at = 10 [json_name = "updated_at"];
+  string username = 3 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
+  bool otp = 4;
+  UserRole role = 5;
+  UserState state = 6;
+  UserData data = 7;
+  google.protobuf.Timestamp created_at = 8 [json_name = 'created_at'];
+  google.protobuf.Timestamp updated_at = 9 [json_name = 'updated_at'];
+}
+
+message UserCredentials {
+  option (gorm.opts) = {
+    ormable: true,
+    json: true
+  };
+  atlas.rpc.Identifier user_id = 1 [(gorm.field).tag = { type: 'bigint', index: 'idx_users_on_user_id' }];
+  int64 value_index = 2 [(gorm.field).nilable = true];
+  string value_encrypted = 3 [(gorm.field).nilable = true];
+  enum Type {
+    EMAIL = 0;
+    PHONE = 2;
+  }
+  Type type = 4;
+  google.protobuf.Timestamp created_at = 5 [json_name = 'created_at'];
+  google.protobuf.Timestamp updated_at = 6 [json_name = 'updated_at'];
 }
