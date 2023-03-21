@@ -10,17 +10,19 @@ import "google/protobuf/timestamp.proto";
 option go_package = "github.com/zsmartex/zsmartex/proto/common/user/v1;userv1";
 
 enum UserRole {
-  USER_ROLE_MEMBER = 0;
-  USER_ROLE_ADMIN = 1;
-  USER_ROLE_SUPERADMIN = 2;
+  USER_ROLE_UNSIGNED = 0;
+  USER_ROLE_MEMBER = 1;
+  USER_ROLE_ADMIN = 2;
+  USER_ROLE_SUPERADMIN = 3;
 }
 
 enum UserState {
-  USER_STATE_PENDING = 0;
-  USER_STATE_ACTIVE = 1;
-  USER_STATE_DELETED = 2;
-  USER_STATE_BANNED = 3;
-  USER_STATE_LOCKED = 4;
+  USER_STATE_UNSIGNED = 0;
+  USER_STATE_PENDING = 1;
+  USER_STATE_ACTIVE = 2;
+  USER_STATE_DELETED = 3;
+  USER_STATE_BANNED = 4;
+  USER_STATE_LOCKED = 5;
 }
 
 message UserData {
@@ -36,13 +38,14 @@ message User {
   };
   atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'bigint' primary_key: true auto_increment: true }];
   string uid = 2 [(gorm.field).tag = { index: "idx_users_on_uid" unique: true }];
-  string username = 3 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
-  bool otp = 4;
-  UserRole role = 5;
-  UserState state = 6;
-  UserData data = 7;
-  google.protobuf.Timestamp created_at = 8 [json_name = 'created_at'];
-  google.protobuf.Timestamp updated_at = 9 [json_name = 'updated_at'];
+  string password_digest = 3;
+  string username = 4 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
+  bool otp = 5;
+  UserRole role = 6;
+  UserState state = 7;
+  UserData data = 8;
+  google.protobuf.Timestamp created_at = 9 [json_name = 'created_at'];
+  google.protobuf.Timestamp updated_at = 10 [json_name = 'updated_at'];
 }
 
 message UserCredentials {

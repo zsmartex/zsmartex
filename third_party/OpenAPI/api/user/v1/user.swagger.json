@@ -299,6 +299,9 @@
         "uid": {
           "type": "string"
         },
+        "passwordDigest": {
+          "type": "string"
+        },
         "username": {
           "type": "string"
         },
@@ -341,22 +344,24 @@
     "v1UserRole": {
       "type": "string",
       "enum": [
+        "USER_ROLE_UNSIGNED",
         "USER_ROLE_MEMBER",
         "USER_ROLE_ADMIN",
         "USER_ROLE_SUPERADMIN"
       ],
-      "default": "USER_ROLE_MEMBER"
+      "default": "USER_ROLE_UNSIGNED"
     },
     "v1UserState": {
       "type": "string",
       "enum": [
+        "USER_STATE_UNSIGNED",
         "USER_STATE_PENDING",
         "USER_STATE_ACTIVE",
         "USER_STATE_DELETED",
         "USER_STATE_BANNED",
         "USER_STATE_LOCKED"
       ],
-      "default": "USER_STATE_PENDING"
+      "default": "USER_STATE_UNSIGNED"
     }
   },
   "externalDocs": {

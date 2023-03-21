@@ -2,7 +2,10 @@ package postgresql
 
 import (
 	"context"
+	"errors"
 
+	"github.com/zsmartex/pkg/v3/gpa"
+	"github.com/zsmartex/pkg/v3/gpa/filters"
 	"github.com/zsmartex/pkg/v3/repository"
 	"github.com/zsmartex/pkg/v3/usecase"
 	userv1 "github.com/zsmartex/zsmartex/proto/common/user/v1"
@@ -11,7 +14,8 @@ import (
 
 type UserCredentialsRepository interface {
 	WithTrx(tx *gorm.DB) UserCredentialsRepository
-	CreateUserCredentials(context.Context, CreateUserCredentialsParams) (*userv1.UserCredentialsORM, error)
+	GetUserCredentials(ctx context.Context, params GetUserCredentialsParams) (*userv1.UserCredentialsORM, error)
+	CreateOrUpdateUserCredentials(context.Context, CreateOrUpdateUserCredentialsParams) (*userv1.UserCredentialsORM, error)
 }
 
 type userCredentialsRepo struct {
@@ -31,18 +35,38 @@ func (r userCredentialsRepo) WithTrx(tx *gorm.DB) UserCredentialsRepository {
 	return r
 }
 
-type CreateUserCredentialsParams struct {
+type GetUserCredentialsParams struct {
+	Type  userv1.UserCredentials_Type
+	Value string
+}
+
+func (r userCredentialsRepo) GetUserCredentials(ctx context.Context, params GetUserCredentialsParams) (*userv1.UserCredentialsORM, error) {
+	fs := make([]gpa.Filter, 0)
+
+	if params.Type == userv1.UserCredentials_EMAIL {
+
+	} else {
+
+	}
+
+	return r.First(ctx, fs...)
+}
+
+type CreateOrUpdateUserCredentialsParams struct {
 	UserID int64
 	Type   userv1.UserCredentials_Type
 	Value  string
 }
 
-func (r userCredentialsRepo) CreateUserCredentials(ctx context.Context, params CreateUserCredentialsParams) (*userv1.UserCredentialsORM, error) {
-	userCredentials := &userv1.UserCredentialsORM{
-		UserId: &params.UserID,
-		Type:   userv1.UserCredentials_Type_name[int32(params.Type)],
+func (r userCredentialsRepo) CreateOrUpdateUserCredentials(ctx context.Context, params CreateOrUpdateUserCredentialsParams) (*userv1.UserCredentialsORM, error) {
+	userCredentials, err := r.First(ctx, filters.WithFieldEqual("user_id", params.UserID))
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		// do create
+	} else if userCredentials != nil {
+		// do update
+	} else {
+		return nil, err
 	}
-	err := r.Create(ctx, userCredentials)
 
 	return userCredentials, err
 }
