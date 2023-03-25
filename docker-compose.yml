@@ -7,7 +7,7 @@ services:
     image: "traefik:v2.9"
     ports:
       - "80:80"
-      - "8080:8080"
+      - "8081:8080"
     container_name: "traefik"
     command:
       - "--api.insecure=true"
@@ -25,12 +25,22 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=changeme
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
   redis:
     image: "redis:7"
     ports:
       - "6379:6379"
     container_name: "redis"
+    volumes:
+      - redis:/data
 
 volumes:
   postgres:

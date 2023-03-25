@@ -4,17 +4,15 @@
 package userv1
 
 const (
-	USER_ROLE_UNSIGNED   = UserRole_USER_ROLE_UNSIGNED
-	USER_ROLE_MEMBER     = UserRole_USER_ROLE_MEMBER
-	USER_ROLE_ADMIN      = UserRole_USER_ROLE_ADMIN
-	USER_ROLE_SUPERADMIN = UserRole_USER_ROLE_SUPERADMIN
+	member     = UserRole_member
+	admin      = UserRole_admin
+	superadmin = UserRole_superadmin
 )
 
 const (
-	USER_STATE_UNSIGNED = UserState_USER_STATE_UNSIGNED
-	USER_STATE_PENDING  = UserState_USER_STATE_PENDING
-	USER_STATE_ACTIVE   = UserState_USER_STATE_ACTIVE
-	USER_STATE_DELETED  = UserState_USER_STATE_DELETED
-	USER_STATE_BANNED   = UserState_USER_STATE_BANNED
-	USER_STATE_LOCKED   = UserState_USER_STATE_LOCKED
+	pending = UserState_pending
+	active  = UserState_active
+	deleted = UserState_deleted
+	banned  = UserState_banned
+	locked  = UserState_locked
 )

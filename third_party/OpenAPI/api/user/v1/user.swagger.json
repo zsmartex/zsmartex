@@ -21,7 +21,6 @@
   "paths": {
     "/api/v1/identity/sessions": {
       "post": {
-        "summary": "Login to user service",
         "operationId": "UserService_Login",
         "responses": {
           "200": {
@@ -48,7 +47,7 @@
           }
         ],
         "tags": [
-          "Users"
+          "UserService"
         ]
       }
     },
@@ -246,17 +245,34 @@
     "v1GenerateCodeRegisterResponse": {
       "type": "object"
     },
+    "v1LoginCodes": {
+      "type": "object",
+      "properties": {
+        "otp": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
     "v1LoginRequest": {
       "type": "object",
       "properties": {
         "email": {
           "type": "string"
         },
+        "phone": {
+          "type": "string"
+        },
         "confirm_password": {
           "type": "string"
         },
-        "otp_code": {
-          "type": "string"
+        "codes": {
+          "$ref": "#/definitions/v1LoginCodes"
         }
       }
     },
@@ -314,6 +330,10 @@
         "state": {
           "$ref": "#/definitions/v1UserState"
         },
+        "level": {
+          "type": "integer",
+          "format": "int32"
+        },
         "data": {
           "$ref": "#/definitions/v1UserData"
         },
@@ -344,24 +364,22 @@
     "v1UserRole": {
       "type": "string",
       "enum": [
-        "USER_ROLE_UNSIGNED",
-        "USER_ROLE_MEMBER",
-        "USER_ROLE_ADMIN",
-        "USER_ROLE_SUPERADMIN"
+        "member",
+        "admin",
+        "superadmin"
       ],
-      "default": "USER_ROLE_UNSIGNED"
+      "default": "member"
     },
     "v1UserState": {
       "type": "string",
       "enum": [
-        "USER_STATE_UNSIGNED",
-        "USER_STATE_PENDING",
-        "USER_STATE_ACTIVE",
-        "USER_STATE_DELETED",
-        "USER_STATE_BANNED",
-        "USER_STATE_LOCKED"
+        "pending",
+        "active",
+        "deleted",
+        "banned",
+        "locked"
       ],
-      "default": "USER_STATE_UNSIGNED"
+      "default": "pending"
     }
   },
   "externalDocs": {

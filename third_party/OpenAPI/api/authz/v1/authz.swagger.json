@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "AuthorizationService"
+      "name": "AuthzService"
     }
   ],
   "schemes": [
@@ -21,7 +21,7 @@
   "paths": {
     "/api/v1/authz": {
       "post": {
-        "operationId": "AuthorizationService_Authorization",
+        "operationId": "AuthzService_Authorization",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -51,7 +51,7 @@
           }
         ],
         "tags": [
-          "AuthorizationService"
+          "AuthzService"
         ]
       }
     }

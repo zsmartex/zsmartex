@@ -11,13 +11,13 @@ import "google/protobuf/timestamp.proto";
 option go_package = "github.com/zsmartex/zsmartex/proto/common/code/v1;codev1";
 
 enum CodeType {
-  CODE_TYPE_LOGIN = 0;
-  CODE_TYPE_REGISTER = 1;
+  email = 0;
+  phone = 1;
 }
 
 enum CodeCategory {
-  CODE_CATEGORY_LOGIN = 0;
-  CODE_CATEGORY_REGISTER = 1;
+  login = 0;
+  register = 1;
 }
 
 message Code {
@@ -26,7 +26,7 @@ message Code {
     json: true
   };
   atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'bigint' primary_key: true auto_increment: true }];
-  atlas.rpc.Identifier user_id = 2 ;
+  atlas.rpc.Identifier user_id = 2 [(gorm.field).tag = { type: 'bigint' }];
   string code = 3;
   CodeType type = 4;
   CodeCategory category = 5;

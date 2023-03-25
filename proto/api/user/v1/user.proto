@@ -47,10 +47,6 @@ service UserService {
       body: "*"
       response_body: "user"
     };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Login to user service"
-      tags: "Users"
-    };
   };
   rpc GenerateCodeRegister(GenerateCodeRegisterRequest) returns (GenerateCodeRegisterResponse) {
     option (google.api.http) = {
@@ -91,10 +87,17 @@ message ConfirmResponse {
   common.user.v1.User user = 1;
 }
 
+message LoginCodes {
+  optional string otp = 1;
+  optional string email = 2;
+  optional string phone = 3;
+}
+
 message LoginRequest {
   string email = 1;
-  string password = 2 [json_name = "confirm_password"];
-  string otp_code = 3 [json_name = "otp_code"];
+  string phone = 2;
+  string password = 3 [json_name = "confirm_password"];
+  LoginCodes codes = 4;
 }
 
 message LoginResponse {

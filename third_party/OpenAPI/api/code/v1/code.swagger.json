@@ -145,18 +145,18 @@
     "v1CodeCategory": {
       "type": "string",
       "enum": [
-        "CODE_CATEGORY_LOGIN",
-        "CODE_CATEGORY_REGISTER"
+        "login",
+        "register"
       ],
-      "default": "CODE_CATEGORY_LOGIN"
+      "default": "login"
     },
     "v1CodeType": {
       "type": "string",
       "enum": [
-        "CODE_TYPE_LOGIN",
-        "CODE_TYPE_REGISTER"
+        "email",
+        "phone"
       ],
-      "default": "CODE_TYPE_LOGIN"
+      "default": "email"
     },
     "v1GenerateCodeResponse": {
       "type": "object",
@@ -198,6 +198,10 @@
         "state": {
           "$ref": "#/definitions/v1UserState"
         },
+        "level": {
+          "type": "integer",
+          "format": "int32"
+        },
         "data": {
           "$ref": "#/definitions/v1UserData"
         },
@@ -228,24 +232,22 @@
     "v1UserRole": {
       "type": "string",
       "enum": [
-        "USER_ROLE_UNSIGNED",
-        "USER_ROLE_MEMBER",
-        "USER_ROLE_ADMIN",
-        "USER_ROLE_SUPERADMIN"
+        "member",
+        "admin",
+        "superadmin"
       ],
-      "default": "USER_ROLE_UNSIGNED"
+      "default": "member"
     },
     "v1UserState": {
       "type": "string",
       "enum": [
-        "USER_STATE_UNSIGNED",
-        "USER_STATE_PENDING",
-        "USER_STATE_ACTIVE",
-        "USER_STATE_DELETED",
-        "USER_STATE_BANNED",
-        "USER_STATE_LOCKED"
+        "pending",
+        "active",
+        "deleted",
+        "banned",
+        "locked"
       ],
-      "default": "USER_STATE_UNSIGNED"
+      "default": "pending"
     },
     "v1ValidateCodeRequest": {
       "type": "object",
