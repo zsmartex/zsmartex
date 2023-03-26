@@ -12,6 +12,7 @@ import (
 	"github.com/zsmartex/zsmartex/cmd/user/config"
 	"github.com/zsmartex/zsmartex/internal/user/app/router"
 	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
+	"github.com/zsmartex/zsmartex/internal/user/usecases/users"
 	"github.com/zsmartex/zsmartex/pkg/session"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
@@ -27,7 +28,8 @@ func InitApp(cfg *config.Config, grpcServer *grpc.Server, redisClient *redis.Red
 	}
 	userCredentialsRepository := repo.NewUserCredentialsRepository(db)
 	userRepository := repo.NewUserRepository(db, userCredentialsRepository)
-	userServiceServer := router.NewUserGRPCServer(grpcServer, store, userRepository)
+	useCase := users.NewUserUseCase(userRepository, userCredentialsRepository)
+	userServiceServer := router.NewUserGRPCServer(grpcServer, store, useCase)
 	app := New(cfg, userServiceServer)
 	return app, nil
 }

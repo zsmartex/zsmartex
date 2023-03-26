@@ -3,10 +3,9 @@ package router
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/google/wire"
-	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
+	usersUC "github.com/zsmartex/zsmartex/internal/user/usecases/users"
 	"github.com/zsmartex/zsmartex/pkg/session"
 	userv1 "github.com/zsmartex/zsmartex/proto/api/user/v1"
 	"google.golang.org/grpc"
@@ -18,18 +17,18 @@ var ProductGRPCServerSet = wire.NewSet(NewUserGRPCServer)
 type userGRPCServer struct {
 	userv1.UnimplementedUserServiceServer
 
-	sessionStore   *session.Store
-	userRepository repo.UserRepository
+	sessionStore *session.Store
+	usersUseCase usersUC.UseCase
 }
 
 func NewUserGRPCServer(
 	grpcServer *grpc.Server,
 	sessionStore *session.Store,
-	userRepository repo.UserRepository,
+	usersUseCase usersUC.UseCase,
 ) userv1.UserServiceServer {
 	svc := userGRPCServer{
-		sessionStore:   sessionStore,
-		userRepository: userRepository,
+		sessionStore: sessionStore,
+		usersUseCase: usersUseCase,
 	}
 
 	userv1.RegisterUserServiceServer(grpcServer, &svc)
@@ -40,7 +39,7 @@ func NewUserGRPCServer(
 }
 
 func (s *userGRPCServer) Login(ctx context.Context, request *userv1.LoginRequest) (*userv1.LoginResponse, error) {
-	user, err := s.userRepository.GetUser(ctx, repo.FindUserParams{
+	user, err := s.usersUseCase.GetUser(ctx, usersUC.GetUserParams{
 		Email: request.Email,
 		Phone: request.Phone,
 	})
@@ -61,8 +60,6 @@ func (s *userGRPCServer) Login(ctx context.Context, request *userv1.LoginRequest
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(user)
 
 	return &userv1.LoginResponse{
 		User: &userPb,

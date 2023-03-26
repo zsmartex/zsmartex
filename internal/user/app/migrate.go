@@ -12,6 +12,7 @@ import (
 	"github.com/zsmartex/zsmartex/cmd/user/config"
 	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
 	"github.com/zsmartex/zsmartex/internal/user/migrations"
+	usersUC "github.com/zsmartex/zsmartex/internal/user/usecases/users"
 	"golang.org/x/exp/slog"
 	"gopkg.in/yaml.v3"
 	"gorm.io/gorm"
@@ -86,9 +87,10 @@ func seed(ctx context.Context, postgres *gorm.DB) error {
 
 	userCredentialsRepository := repo.NewUserCredentialsRepository(postgres)
 	userRepository := repo.NewUserRepository(postgres, userCredentialsRepository)
+	userUsecase := usersUC.NewUserUseCase(userRepository, userCredentialsRepository)
 
 	for _, user := range seeds.Users {
-		userExist, _ := userRepository.GetUser(ctx, repo.FindUserParams{
+		userExist, _ := userUsecase.GetUser(ctx, usersUC.GetUserParams{
 			Email: user.Email,
 		})
 
@@ -96,7 +98,7 @@ func seed(ctx context.Context, postgres *gorm.DB) error {
 			continue
 		}
 
-		_, err = userRepository.CreateUser(ctx, repo.CreateUserParams{
+		_, err = userUsecase.CreateUser(ctx, usersUC.CreateUserParams{
 			Email:    user.Email,
 			Password: user.Password,
 			Role:     user.Role,

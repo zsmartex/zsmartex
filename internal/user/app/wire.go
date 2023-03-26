@@ -10,6 +10,7 @@ import (
 	"github.com/zsmartex/zsmartex/cmd/user/config"
 	"github.com/zsmartex/zsmartex/internal/user/app/router"
 	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
+	usersUC "github.com/zsmartex/zsmartex/internal/user/usecases/users"
 	"github.com/zsmartex/zsmartex/pkg/session"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
@@ -25,6 +26,7 @@ func InitApp(
 		postgresFunc,
 		session.NewStore,
 		repo.RepositorySet,
+		usersUC.UseCaseSet,
 		router.ProductGRPCServerSet,
 	))
 }
