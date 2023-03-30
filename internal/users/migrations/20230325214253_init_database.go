@@ -16,12 +16,12 @@ var initDatabase = gormigrate.Migration{
 			UID            string      `gorm:"type:character varying;not null;uniqueIndex:index_users_on_uid"`
 			Username       null.String `gorm:"type:character varying;uniqueIndex:index_users_on_username"`
 			PasswordDigest string      `gorm:"type:character varying;not null"`
-			Level          int64       `gorm:"type:integer;not null;default:0"`
+			Level          int32       `gorm:"type:integer;not null;default:0"`
 			OTP            bool        `gorm:"type:boolean;not null;default:false"`
 			Role           string      `gorm:"type:character varying;not null;default:member"`
 			State          string      `gorm:"type:character varying;not null;default:pending"`
 			ReferralUID    null.String `gorm:"type:character varying"`
-			Data           null.String `gorm:"type:jsonb"`
+			Data           []byte      `gorm:"type:jsonb"`
 			CreatedAt      time.Time   `gorm:"type:timestamp;not null"`
 			UpdatedAt      time.Time   `gorm:"type:timestamp;not null"`
 		}

@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/google/wire"
-	usersUC "github.com/zsmartex/zsmartex/internal/user/usecases/users"
+	usersUC "github.com/zsmartex/zsmartex/internal/users/usecases/users"
 	"github.com/zsmartex/zsmartex/pkg/session"
 	userv1 "github.com/zsmartex/zsmartex/proto/api/user/v1"
 	"google.golang.org/grpc"

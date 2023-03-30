@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gofrs/uuid"
+	"github.com/looplab/eventhorizon/uuid"
 	"github.com/mileusna/useragent"
 )
 
 type SessionData struct {
 	ID              uuid.UUID `json:"id,omitempty"`
-	UserID          int64     `json:"user_id,omitempty"`
+	UserID          uuid.UUID `json:"user_id,omitempty"`
 	UID             string    `json:"uid,omitempty"`
 	UserIP          string    `json:"user_ip,omitempty"`
 	UserIPCountry   string    `json:"user_ip_country,omitempty"`
@@ -46,7 +46,7 @@ func acquireSession() *Session {
 	return s
 }
 
-func (s *Session) SetUserID(userID int64) {
+func (s *Session) SetUserID(userID uuid.UUID) {
 	s.Data.UserID = userID
 }
 

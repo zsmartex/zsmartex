@@ -11,7 +11,7 @@ grpc:
   user_port: 5001
 
 redis:
-  url: redis://localhost:6379
+  uri: redis://localhost:6379
 
 logger:
   log_level: 'debug'

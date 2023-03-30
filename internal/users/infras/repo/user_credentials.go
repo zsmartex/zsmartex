@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/looplab/eventhorizon/uuid"
 	"github.com/zsmartex/pkg/v3/gpa"
 	"github.com/zsmartex/pkg/v3/gpa/filters"
 	"github.com/zsmartex/pkg/v3/repository"
@@ -52,7 +53,7 @@ func (r userCredentialsRepo) GetUserCredentials(ctx context.Context, params GetU
 }
 
 type CreateOrUpdateUserCredentialsParams struct {
-	UserID int64
+	UserID uuid.UUID
 	Type   userv1.UserCredentials_Type
 	Value  string
 }
@@ -61,7 +62,7 @@ func (r userCredentialsRepo) CreateOrUpdateUserCredentials(ctx context.Context, 
 	userCredentials, err := r.First(ctx, filters.WithFieldEqual("user_id", params.UserID))
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		userCredentials := &userv1.UserCredentialsORM{
-			UserId:         &params.UserID,
+			UserId:         params.UserID,
 			ValueIndex:     utils.HashStringCRC32(params.Value),
 			ValueEncrypted: encryption.Encrypt(params.Value),
 			Type:           userv1.UserCredentials_Type_name[int32(params.Type)],

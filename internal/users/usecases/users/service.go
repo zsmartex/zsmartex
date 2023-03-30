@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"github.com/google/wire"
+	"github.com/looplab/eventhorizon/uuid"
 	"github.com/zsmartex/pkg/v3/gpa/filters"
-	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
+	"github.com/zsmartex/zsmartex/internal/users/infras/repo"
 	userv1 "github.com/zsmartex/zsmartex/proto/common/user/v1"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -88,7 +89,7 @@ func (s service) GetUser(ctx context.Context, params GetUserParams) (*userv1.Use
 		return nil, err
 	}
 
-	user, err := s.userRepository.GetUser(ctx, *userCredentials.UserId)
+	user, err := s.userRepository.GetUser(ctx, userCredentials.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +128,7 @@ func (s service) CreateUser(ctx context.Context, params CreateUserParams) (*user
 		}
 
 		_, err = s.userCredentialsRepository.WithTrx(tx).CreateOrUpdateUserCredentials(ctx, repo.CreateOrUpdateUserCredentialsParams{
-			UserID: *user.Id,
+			UserID: user.Id,
 			Type:   userCredentialsType,
 			Value:  userCredentialsValue,
 		})
@@ -142,7 +143,7 @@ func (s service) CreateUser(ctx context.Context, params CreateUserParams) (*user
 }
 
 type UpdateUserParams struct {
-	UserID           int64
+	UserID           uuid.UUID
 	CredentialsType  userv1.UserCredentials_Type
 	CredentialsValue string
 	Password         string

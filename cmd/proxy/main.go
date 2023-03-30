@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
-	"github.com/gofrs/uuid"
-	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/looplab/eventhorizon/uuid"
 	"github.com/zsmartex/pkg/v3/infrastucture/redis"
 	"github.com/zsmartex/zsmartex/cmd/proxy/config"
 	"github.com/zsmartex/zsmartex/pkg/session"
 	userv1 "github.com/zsmartex/zsmartex/proto/api/user/v1"
-	"golang.org/x/exp/slog"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
@@ -54,28 +55,29 @@ func preflightHandler(w http.ResponseWriter, r *http.Request) {
 
 	methods := []string{"GET", "HEAD", "POST", "PUT", "DELETE"}
 	w.Header().Set("Access-Control-Allow-Methods", strings.Join(methods, ","))
-
-	slog.Info("preflight request", "http_path", r.URL.Path)
 }
 
 func main() {
 	ctx := context.Background()
-
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
+	zapLogger, _ := zap.NewProduction()
+	defer zapLogger.Sync()
+	logger := zapLogger.Sugar()
+
 	cfg, err := config.NewConfig()
 	if err != nil {
-		glog.Fatalf("Config error: %s", err)
+		logger.Fatalf("Config error: %s", err)
 	}
 
 	server := gin.New()
-	server.Use(gin.Logger())
+	server.Use(ginzap.Ginzap(zapLogger, time.RFC3339, true))
 	server.Use(allowCORS)
 
-	redisClient, err := redis.New(cfg.Redis.URL)
+	redisClient, err := redis.New(cfg.Redis.URI)
 	if err != nil {
-		slog.Error("failed connect to redis", err)
+		logger.Error("failed connect to redis", err)
 	}
 
 	sessionStore := session.NewStore(redisClient)
@@ -103,9 +105,12 @@ func main() {
 				return nil
 			}
 
-			sessionID := md.HeaderMD.Get("session_id")[0]
+			sessionID, err := uuid.Parse(md.HeaderMD.Get("session_id")[0])
+			if err != nil {
+				return nil
+			}
 
-			session, err := sessionStore.GetSession(ctx, uuid.FromStringOrNil(sessionID))
+			session, err := sessionStore.GetSession(ctx, sessionID)
 			if err != nil {
 				return err
 			}
@@ -116,7 +121,7 @@ func main() {
 		}),
 	)
 	if err != nil {
-		slog.Error("failed to create a new gateway", err)
+		logger.Error("failed to create a new gateway", err)
 	}
 
 	server.Group("*{grpc_gateway}").Any("", func(c *gin.Context) {
@@ -125,11 +130,11 @@ func main() {
 
 	go func() {
 		<-ctx.Done()
-		slog.Info("shutting down the http server")
+		logger.Info("shutting down the http server")
 	}()
 
-	slog.Info("start listening...", "address", fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
+	logger.Info("start listening...", "address", fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
 	if err := server.Run(fmt.Sprintf("%s:%d", cfg.HTTP.Host, cfg.HTTP.Port)); err != nil {
-		slog.Error("failed to listen and serve", err)
+		logger.Error("failed to listen and serve", err)
 	}
 }

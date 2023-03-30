@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/zsmartex/zsmartex/cmd/user/config"
+	"github.com/zsmartex/zsmartex/cmd/users/config"
 	userv1 "github.com/zsmartex/zsmartex/proto/api/user/v1"
 )
 

@@ -9,6 +9,9 @@ http:
 logger:
   log_level: 'debug'
 
+codes_client:
+  url: 127.0.0.1:5002
+
 postgres:
   host: localhost
   port: 5432
@@ -17,4 +20,10 @@ postgres:
   database: zsmartex
 
 redis:
-  url: redis://localhost:6379
+  uri: redis://localhost:6379
+
+mongo:
+  url: mongodb://root:changeme@127.0.0.1:27017/
+
+nats:
+  url: localhost:8222

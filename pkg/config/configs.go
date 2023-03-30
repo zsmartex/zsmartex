@@ -23,7 +23,15 @@ type (
 		Database string `env-required:"true" yaml:"database" env:"POSTGRES_DATABASE" env-default:"zsmartex"`
 	}
 
+	Mongo struct {
+		URI string `env-required:"true" yaml:"uri" env:"MONGO_URI" env-default:"mongodb://root:changeme@127.0.0.1:27017/"`
+	}
+
 	Redis struct {
-		URL string `env-required:"true" yaml:"url" env:"REDIS_URL" env-default:"redis://localhost:6379"`
+		URI string `env-required:"true" yaml:"uri" env:"REDIS_URI" env-default:"redis://localhost:6379"`
+	}
+
+	Nats struct {
+		URI string `env-required:"true" yaml:"uri" env:"NATS_URI" env-default:"localhost:8222"`
 	}
 )

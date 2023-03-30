@@ -25,8 +25,8 @@ message Code {
     ormable: true,
     json: true
   };
-  atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'bigint' primary_key: true auto_increment: true }];
-  atlas.rpc.Identifier user_id = 2 [(gorm.field).tag = { type: 'bigint' }];
+  atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'uuid' primary_key: true auto_increment: true }];
+  atlas.rpc.Identifier user_id = 2 [(gorm.field).tag = { type: 'uuid' }];
   string code = 3;
   CodeType type = 4;
   CodeCategory category = 5;

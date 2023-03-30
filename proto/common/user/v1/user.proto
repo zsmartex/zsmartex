@@ -34,7 +34,7 @@ message User {
     ormable: true,
     json: true
   };
-  atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'bigint' primary_key: true auto_increment: true }];
+  atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'uuid' primary_key: true auto_increment: true }];
   string uid = 2 [(gorm.field).tag = { type: 'character varying' index: "index_users_on_uid" unique: true }];
   string password_digest = 3 [(gorm.field).tag = { type: 'character varying' not_null: true }];
   string username = 4 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
@@ -52,7 +52,7 @@ message UserCredentials {
     ormable: true,
     json: true
   };
-  atlas.rpc.Identifier user_id = 1 [(gorm.field).tag = { type: 'bigint' not_null: true unique_index: 'idx_users_on_user_id_and_type' }];
+  atlas.rpc.Identifier user_id = 1 [(gorm.field).tag = { type: 'uuid' not_null: true unique_index: 'idx_users_on_user_id_and_type' }];
   int64 value_index = 2 [(gorm.field).tag = { type: 'bigint' not_null: true unique_index: 'index_user_credentials_on_value_index' }];
   string value_encrypted = 3 [(gorm.field).tag = { type: 'character varying' not_null: true }];
   enum Type {

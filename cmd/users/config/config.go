@@ -14,6 +14,13 @@ type (
 		configs.Log      `yaml:"logger"`
 		configs.Postgres `yaml:"postgres"`
 		configs.Redis    `yaml:"redis"`
+		configs.Mongo    `yaml:"mongo"`
+		configs.Nats     `yaml:"nats"`
+		// CodesClient      `yaml:"code_client"`
+	}
+
+	CodesClient struct {
+		URL string `env-required:"false" yaml:"url" env:"CODE_CLIENT_URL"`
 	}
 )
 

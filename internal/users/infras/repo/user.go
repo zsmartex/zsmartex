@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 
+	"github.com/looplab/eventhorizon/uuid"
 	"github.com/zsmartex/pkg/v3/gpa/filters"
 	"github.com/zsmartex/pkg/v3/repository"
 	"github.com/zsmartex/pkg/v3/usecase"
@@ -15,7 +16,7 @@ type UserRepository interface {
 	usecase.IUsecase[userv1.UserORM]
 
 	WithTrx(db *gorm.DB) UserRepository
-	GetUser(ctx context.Context, params int64) (*userv1.UserORM, error)
+	GetUser(ctx context.Context, userID uuid.UUID) (*userv1.UserORM, error)
 	CreateUser(context.Context, CreateUserParams) (*userv1.UserORM, error)
 	UpdateUser(ctx context.Context, params UpdateUserParams) (user *userv1.UserORM, err error)
 }
@@ -40,7 +41,7 @@ func (r userRepo) WithTrx(tx *gorm.DB) UserRepository {
 	return r
 }
 
-func (r userRepo) GetUser(ctx context.Context, userID int64) (*userv1.UserORM, error) {
+func (r userRepo) GetUser(ctx context.Context, userID uuid.UUID) (*userv1.UserORM, error) {
 	user, err := r.First(ctx, filters.WithFieldEqual("id", userID))
 	if err != nil {
 		return nil, err
@@ -74,7 +75,7 @@ func (r userRepo) CreateUser(ctx context.Context, params CreateUserParams) (*use
 }
 
 type UpdateUserParams struct {
-	UserID   int64
+	UserID   uuid.UUID
 	Password string
 	State    userv1.UserState
 	Role     userv1.UserRole

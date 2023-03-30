@@ -12,8 +12,9 @@ type (
 		configs.App   `yaml:"app"`
 		configs.HTTP  `yaml:"http"`
 		configs.Log   `yaml:"logger"`
-		GRPC          `yaml:"grpc"`
 		configs.Redis `yaml:"redis"`
+		configs.Nats  `yaml:"nats"`
+		GRPC          `yaml:"grpc"`
 	}
 
 	GRPC struct {

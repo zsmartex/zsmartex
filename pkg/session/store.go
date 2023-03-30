@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gofrs/uuid"
+	"github.com/looplab/eventhorizon/uuid"
 	"github.com/zsmartex/pkg/v3/infrastucture/redis"
 	userv1 "github.com/zsmartex/zsmartex/proto/common/user/v1"
 	"google.golang.org/grpc"
@@ -125,7 +125,7 @@ func (s *Store) ApplySession(ctx context.Context, user *userv1.UserORM) (*Sessio
 
 	if id == uuid.Nil {
 		fresh = true
-		id, err = uuid.NewV4()
+		id = uuid.New()
 		if err != nil {
 			return nil, err
 		}
@@ -155,7 +155,7 @@ func (s *Store) ApplySession(ctx context.Context, user *userv1.UserORM) (*Sessio
 				return nil, err
 			}
 		}
-		session.Data.UserID = *user.Id
+		session.Data.UserID = user.Id
 		session.Data.UID = user.Uid
 		session.Data.UserAgent = md.Get("grpcgateway-user-agent")[0]
 		session.Data.AuthenticatedAt = time.Now()
@@ -186,5 +186,10 @@ func (s *Store) getSessionID(md metadata.MD) uuid.UUID {
 		return uuid.Nil
 	}
 
-	return uuid.FromStringOrNil(md.Get("session_id")[0])
+	id, err := uuid.Parse(md.Get("session_id")[0])
+	if err != nil {
+		return uuid.Nil
+	}
+
+	return id
 }
