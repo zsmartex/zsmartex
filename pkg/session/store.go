@@ -112,7 +112,7 @@ func (s *Store) DeleteSession(ctx context.Context, uid string, sessionID string)
 	return s.redis.Delete(ctx, fmt.Sprintf("_user_session:%s:%s", uid, sessionID))
 }
 
-func (s *Store) ApplySession(ctx context.Context, user *userv1.UserORM) (*Session, error) {
+func (s *Store) ApplySession(ctx context.Context, user *userv1.User) (*Session, error) {
 	var err error
 	fresh := false
 
@@ -155,7 +155,12 @@ func (s *Store) ApplySession(ctx context.Context, user *userv1.UserORM) (*Sessio
 				return nil, err
 			}
 		}
-		session.Data.UserID = user.Id
+		userID, err := user.Id.ToUUID()
+		if err != nil {
+			return nil, err
+		}
+
+		session.Data.UserID = userID
 		session.Data.UID = user.Uid
 		session.Data.UserAgent = md.Get("grpcgateway-user-agent")[0]
 		session.Data.AuthenticatedAt = time.Now()

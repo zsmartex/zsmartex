@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package common.types;
+
+option go_package = "github.com/zsmartex/zsmartex/proto/common/types;types";
+
+message UUID {
+  string value = 1;
+}

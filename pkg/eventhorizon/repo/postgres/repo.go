@@ -1,4 +1,4 @@
-package repo
+package postgres
 
 import (
 	"context"
@@ -61,8 +61,21 @@ func (r *Repo[T]) InnerRepo(ctx context.Context) eh.ReadRepo {
 	return nil
 }
 
+func IntoRepo[T eh.Entity](ctx context.Context, repo eh.ReadRepo) *Repo[T] {
+	if repo == nil {
+		return nil
+	}
+
+	if r, ok := repo.(*Repo[T]); ok {
+		return r
+	}
+
+	return IntoRepo[T](ctx, repo.InnerRepo(ctx))
+}
+
 func (r *Repo[T]) Find(ctx context.Context, id uuid.UUID) (eh.Entity, error) {
 	var entity T
+
 	if err := r.client.WithContext(ctx).Preload(clause.Associations).First(&entity, "id = ?", id.String()).Error; err == gorm.ErrRecordNotFound {
 		return nil, &eh.RepoError{
 			Err:      eh.ErrEntityNotFound,
@@ -91,8 +104,8 @@ func (r *Repo[T]) FindAll(ctx context.Context) ([]eh.Entity, error) {
 	}
 
 	entities := make([]eh.Entity, 0)
-	for _, record := range records {
-		entities = append(entities, record)
+	for _, v := range records {
+		entities = append(entities, v)
 	}
 
 	return entities, nil
@@ -120,6 +133,7 @@ func (r *Repo[T]) Save(ctx context.Context, entity eh.Entity) error {
 
 func (r *Repo[T]) Remove(ctx context.Context, id uuid.UUID) error {
 	var entity T
+
 	result := r.client.WithContext(ctx).Delete(entity, "id = ?", id.String())
 	if err := result.Error; err != nil {
 		return &eh.RepoError{

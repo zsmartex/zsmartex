@@ -18,7 +18,8 @@ func New(
 	eventBus eh.EventBus,
 	outBox eh.Outbox,
 	repo eh.ReadWriteRepo,
-	events []eh.Event,
+	projector *projector.EventHandler,
+	eventTypes []eh.EventType,
 	commandTypes []eh.CommandType,
 	aggregateType eh.AggregateType,
 	logger *zap.Logger,
@@ -32,7 +33,7 @@ func New(
 
 	// Add a logger as an observer.
 	if err := eventBus.AddHandler(ctx, eh.MatchAll{}, eh.UseEventHandlerMiddleware(NewLogger(logger))); err != nil {
-		logger.Fatal("failure to add logger as an observer", zap.Error(err))
+		return err
 	}
 
 	// Create the aggregate store.
@@ -54,11 +55,13 @@ func New(
 		}
 	}
 
-	usersProjector := projector.NewEventHandler()
-
-	// eventBus.AddHandler()
+	if err = eventBus.AddHandler(ctx, eh.MatchEvents(eventTypes), projector); err != nil {
+		return nil
+	}
 
 	outBox.Start()
+
+	logger.Debug("eventhorizon setup has done!")
 
 	return nil
 }

@@ -2,25 +2,25 @@ syntax = "proto3";
 
 package common.user.v1;
 
-import "gorm/options.proto";
-import "gorm/types.proto";
-import "atlas/resource/v1/resource.proto";
 import "google/protobuf/timestamp.proto";
+import "common/types/types.proto";
 
 option go_package = "github.com/zsmartex/zsmartex/proto/common/user/v1;userv1";
 
 enum UserRole {
-  member = 0;
-  admin = 1;
-  superadmin = 2;
+  MEMBER = 0;
+  ADMIN = 1;
+  SUPERADMIN = 2;
+  SUPPORTER = 3;
+  TECHNICAL = 4;
 }
 
 enum UserState {
-  pending = 0;
-  active = 1;
-  deleted = 2;
-  banned = 3;
-  locked = 4;
+  PENDING = 0;
+  ACTIVE = 1;
+  DELETED = 2;
+  BANNED = 3;
+  LOCKED = 4;
 }
 
 message UserData {
@@ -30,36 +30,37 @@ message UserData {
 }
 
 message User {
-  option (gorm.opts) = {
-    ormable: true,
-    json: true
-  };
-  atlas.rpc.Identifier id = 1 [(gorm.field).tag = { type: 'uuid' primary_key: true auto_increment: true }];
-  string uid = 2 [(gorm.field).tag = { type: 'character varying' index: "index_users_on_uid" unique: true }];
-  string password_digest = 3 [(gorm.field).tag = { type: 'character varying' not_null: true }];
-  string username = 4 [(gorm.field).nilable = true, (gorm.field).tag = { index: "idx_users_on_username" unique: true }];
-  bool otp = 5 [(gorm.field).tag = { type: 'boolean' default: 'false' not_null: true }];
-  UserRole role = 6 [(gorm.field).tag = { type: 'character varying' not_null: true default: 'member' }];
-  UserState state = 7 [(gorm.field).tag = { type: 'character varying' not_null: true default: 'pending' }];
-  int32 level = 8 [(gorm.field).tag = { type: 'integer' default: '0' not_null: true  index: "index_users_on_level" }];
-  UserData data = 9;
-  google.protobuf.Timestamp created_at = 10 [json_name = 'created_at', (gorm.field).tag = { type: 'timestamp' not_null: true }];
-  google.protobuf.Timestamp updated_at = 11 [json_name = 'updated_at', (gorm.field).tag = { type: 'timestamp' not_null: true }];
+  common.types.UUID id = 1;
+  string uid = 2;
+  string password_digest = 3;
+  string username = 4;
+  bool otp = 5;
+  UserRole role = 6;
+  UserState state = 7;
+  int32 level = 8;
+  repeated UserCredentials credentials = 9;
+  repeated UserLabel labels = 10;
+  UserData data = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+}
+
+message UserLabel {
+  string key = 1;
+  string value = 2;
+  string description = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
 }
 
 message UserCredentials {
-  option (gorm.opts) = {
-    ormable: true,
-    json: true
-  };
-  atlas.rpc.Identifier user_id = 1 [(gorm.field).tag = { type: 'uuid' not_null: true unique_index: 'idx_users_on_user_id_and_type' }];
-  int64 value_index = 2 [(gorm.field).tag = { type: 'bigint' not_null: true unique_index: 'index_user_credentials_on_value_index' }];
-  string value_encrypted = 3 [(gorm.field).tag = { type: 'character varying' not_null: true }];
+  int64 value_index = 1;
+  string value_encrypted = 2;
   enum Type {
     EMAIL = 0;
     PHONE = 2;
   }
-  Type type = 4 [(gorm.field).tag = { type: 'character varying(8)' not_null: true unique_index: 'idx_users_on_user_id_and_type' }];
-  google.protobuf.Timestamp created_at = 10 [json_name = 'created_at', (gorm.field).tag = { type: 'timestamp' not_null: true }];
-  google.protobuf.Timestamp updated_at = 11 [json_name = 'updated_at', (gorm.field).tag = { type: 'timestamp' not_null: true }];
+  Type type = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
 }

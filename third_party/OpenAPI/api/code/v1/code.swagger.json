@@ -26,26 +26,6 @@
       },
       "additionalProperties": {}
     },
-    "rpcIdentifier": {
-      "type": "string",
-      "format": "string",
-      "properties": {
-        "applicationName": {
-          "type": "string",
-          "title": "An application identifier that will be used among\nother infrastructure services to identify the application"
-        },
-        "resourceType": {
-          "type": "string",
-          "title": "An application specific type name of a resource"
-        },
-        "resourceId": {
-          "type": "string",
-          "title": "An application specific resource identity of a resource"
-        }
-      },
-      "description": "atlas.api.identifier",
-      "title": "A number of application services require a mechanism to\nencode the identity of a particular resource across applications.\nThe resource identifiers consist of the application ID,\nan application-defined resource type,\nand an application-defined ID for that resource"
-    },
     "rpcStatus": {
       "type": "object",
       "properties": {
@@ -61,6 +41,14 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "typesUUID": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
         }
       }
     },
@@ -93,10 +81,10 @@
       "type": "object",
       "properties": {
         "id": {
-          "$ref": "#/definitions/rpcIdentifier"
+          "$ref": "#/definitions/typesUUID"
         },
         "userId": {
-          "$ref": "#/definitions/rpcIdentifier"
+          "$ref": "#/definitions/typesUUID"
         },
         "code": {
           "type": "string"
@@ -136,27 +124,24 @@
         "expiredAt": {
           "type": "string",
           "format": "date-time"
-        },
-        "user": {
-          "$ref": "#/definitions/v1User"
         }
       }
     },
     "v1CodeCategory": {
       "type": "string",
       "enum": [
-        "login",
-        "register"
+        "LOGIN",
+        "REGISTER"
       ],
-      "default": "login"
+      "default": "LOGIN"
     },
     "v1CodeType": {
       "type": "string",
       "enum": [
-        "email",
-        "phone"
+        "EMAIL",
+        "PHONE"
       ],
-      "default": "email"
+      "default": "EMAIL"
     },
     "v1GenerateCodeResponse": {
       "type": "object",
@@ -173,81 +158,6 @@
           "$ref": "#/definitions/v1Code"
         }
       }
-    },
-    "v1User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/definitions/rpcIdentifier"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "passwordDigest": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "otp": {
-          "type": "boolean"
-        },
-        "role": {
-          "$ref": "#/definitions/v1UserRole"
-        },
-        "state": {
-          "$ref": "#/definitions/v1UserState"
-        },
-        "level": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
-          "$ref": "#/definitions/v1UserData"
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updated_at": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "v1UserData": {
-      "type": "object",
-      "properties": {
-        "phone": {
-          "type": "boolean"
-        },
-        "profile": {
-          "type": "boolean"
-        },
-        "referral_uid": {
-          "type": "string"
-        }
-      }
-    },
-    "v1UserRole": {
-      "type": "string",
-      "enum": [
-        "member",
-        "admin",
-        "superadmin"
-      ],
-      "default": "member"
-    },
-    "v1UserState": {
-      "type": "string",
-      "enum": [
-        "pending",
-        "active",
-        "deleted",
-        "banned",
-        "locked"
-      ],
-      "default": "pending"
     },
     "v1ValidateCodeRequest": {
       "type": "object",
