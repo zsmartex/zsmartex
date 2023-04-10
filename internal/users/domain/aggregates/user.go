@@ -1,8 +1,9 @@
-package domain
+package aggregates
 
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	eh "github.com/looplab/eventhorizon"
@@ -20,23 +21,23 @@ var (
 	ErrUserAlreadyExists error = errors.New("user already exists")
 )
 
-var _ = eh.Aggregate(&User{})
+var _ = eh.Aggregate(&UserAggregate{})
 
-type User struct {
+type UserAggregate struct {
 	*ehEvents.AggregateBase
 	userRepository repo.UserRepository
 	logger         *zap.Logger
 }
 
-func NewUserAggregate(id uuid.UUID, userRepository repo.UserRepository, logger *zap.Logger) *User {
-	return &User{
+func NewUserAggregate(id uuid.UUID, userRepository repo.UserRepository, logger *zap.Logger) *UserAggregate {
+	return &UserAggregate{
 		AggregateBase:  ehEvents.NewAggregateBase(domain.UserAggregateType, id),
 		userRepository: userRepository,
 		logger:         logger,
 	}
 }
 
-func (a *User) HandleCommand(ctx context.Context, cmd eh.Command) error {
+func (a *UserAggregate) HandleCommand(ctx context.Context, cmd eh.Command) error {
 	switch cmd := cmd.(type) {
 	case commands.UserCreateCommand:
 		user, err := a.userRepository.GetUser(ctx, repo.GetUserParams{
@@ -79,7 +80,7 @@ func (a *User) HandleCommand(ctx context.Context, cmd eh.Command) error {
 	default:
 		a.logger.Error("invalid command", zap.Any("command", cmd))
 
-		return errors.New("")
+		return fmt.Errorf("invalid command %v", cmd)
 	}
 
 	return nil

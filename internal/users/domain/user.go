@@ -29,6 +29,7 @@ type UserCredentials struct {
 
 type User struct {
 	ID             uuid.UUID          `json:"id" bson:"_id"`
+	UID            string             `json:"uid" bson:"uid"`
 	Username       null.String        `json:"username" bson:"username"`
 	PasswordDigest string             `json:"password_digest" bson:"password_digest"`
 	Level          int32              `json:"level" bson:"level"`

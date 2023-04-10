@@ -3,15 +3,16 @@ package projections
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	eh "github.com/looplab/eventhorizon"
 	"github.com/looplab/eventhorizon/eventhandler/projector"
 	"github.com/zsmartex/pkg/v3/utils"
 	"github.com/zsmartex/zsmartex/internal/users/domain"
 	"github.com/zsmartex/zsmartex/internal/users/domain/events"
-	"github.com/zsmartex/zsmartex/internal/users/infras/repo"
 	"github.com/zsmartex/zsmartex/pkg/encryption"
 	userv1 "github.com/zsmartex/zsmartex/proto/common/user/v1"
+	"go.uber.org/zap"
 )
 
 var _ = projector.Projector(&UserProjector{})
@@ -19,12 +20,14 @@ var _ = projector.Projector(&UserProjector{})
 const userProjectorType projector.Type = "user"
 
 type UserProjector struct {
-	userRepository repo.UserRepository
+	logger *zap.Logger
 }
 
-func NewUserProjector(userRepository repo.UserRepository) *UserProjector {
+func NewUserProjector(
+	logger *zap.Logger,
+) *UserProjector {
 	return &UserProjector{
-		userRepository,
+		logger,
 	}
 }
 
@@ -54,6 +57,7 @@ func (p *UserProjector) Project(ctx context.Context, event eh.Event, entity eh.E
 		}
 
 		user.ID = event.AggregateID()
+		user.UID = utils.GenerateUID()
 		user.PasswordDigest = data.PasswordDigest
 		user.Role = userv1.UserRole_MEMBER
 		user.State = userv1.UserState_PENDING
@@ -103,8 +107,13 @@ func (p *UserProjector) Project(ctx context.Context, event eh.Event, entity eh.E
 		if err := destroyLabel(user, data.Key); err != nil {
 			return nil, err
 		}
+	default:
+		p.logger.Error("invalid event", zap.Any("event", event))
+
+		return nil, fmt.Errorf("invalid event %v", event)
 	}
 
+	user.Version++
 	return user, nil
 }
 
