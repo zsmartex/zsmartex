@@ -29,7 +29,7 @@ func NewActivityProjector(
 }
 
 func (p *ActivityProjector) ProjectorType() projector.Type {
-	return userProjectorType
+	return activityProjectorType
 }
 
 func (p *ActivityProjector) Project(ctx context.Context, event eh.Event, entity eh.Entity) (eh.Entity, error) {

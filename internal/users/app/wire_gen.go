@@ -26,22 +26,9 @@ func InitApp(cfg *config.Config, grpcServer *grpc.Server, redisClient *redis.Red
 	if err != nil {
 		return nil, err
 	}
-	userCredentialsRepository := repo.NewUserCredentialsRepository(db)
-	userRepository := repo.NewUserRepository(db, userCredentialsRepository)
-	useCase := users.NewUserUseCase(userRepository, userCredentialsRepository)
-	userServiceServer := router.NewUserGRPCServer(grpcServer, store, useCase)
+	userServiceServer := router.NewUserGRPCServer(grpcServer, store)
 	app := New(cfg, userServiceServer)
 	return app, nil
 }
 
 // wire.go:
-
-func postgresFunc(config2 *config.Config) (*gorm.DB, error) {
-	return database.New(&database.Config{
-		Host:     config2.Postgres.Host,
-		Port:     config2.Postgres.Port,
-		User:     config2.Postgres.User,
-		Password: config2.Postgres.Password,
-		DBName:   config2.Postgres.Database,
-	})
-}

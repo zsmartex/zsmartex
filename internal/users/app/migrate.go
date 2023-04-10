@@ -2,113 +2,97 @@
 
 package app
 
-import (
-	"context"
-	"io/ioutil"
-	"os"
+// type Seeds struct {
+// 	Users []UserSeed `yaml:"users"`
+// }
 
-	"github.com/go-gormigrate/gormigrate/v2"
-	"github.com/zsmartex/pkg/v3/infrastucture/database"
-	"github.com/zsmartex/zsmartex/cmd/users/config"
-	"github.com/zsmartex/zsmartex/internal/users/infras/repo"
-	"github.com/zsmartex/zsmartex/internal/users/migrations"
-	usersUC "github.com/zsmartex/zsmartex/internal/users/usecases/users"
-	"golang.org/x/exp/slog"
-	"gopkg.in/yaml.v3"
-	"gorm.io/gorm"
-)
+// type UserSeed struct {
+// 	Email    string `yaml:"email"`
+// 	Password string `yaml:"password"`
+// 	Role     string `yaml:"role"`
+// 	State    string `yaml:"state"`
+// 	Level    int32  `yaml:"level"`
+// }
 
-type Seeds struct {
-	Users []UserSeed `yaml:"users"`
-}
+// func init() {
+// 	ctx := context.Background()
 
-type UserSeed struct {
-	Email    string `yaml:"email"`
-	Password string `yaml:"password"`
-	Role     string `yaml:"role"`
-	State    string `yaml:"state"`
-	Level    int32  `yaml:"level"`
-}
+// 	ctx, cancel := context.WithCancel(ctx)
+// 	defer cancel()
 
-func init() {
-	ctx := context.Background()
+// 	config, err := config.NewConfig()
+// 	if err != nil {
+// 		slog.Error("failed get config", err)
+// 		return
+// 	}
 
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+// 	postgres, err := database.New(&database.Config{
+// 		Host:     config.Postgres.Host,
+// 		Port:     config.Postgres.Port,
+// 		User:     config.Postgres.User,
+// 		Password: config.Postgres.Password,
+// 		DBName:   config.Postgres.Database,
+// 	})
 
-	config, err := config.NewConfig()
-	if err != nil {
-		slog.Error("failed get config", err)
-		return
-	}
+// 	err = migrate(postgres)
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	postgres, err := database.New(&database.Config{
-		Host:     config.Postgres.Host,
-		Port:     config.Postgres.Port,
-		User:     config.Postgres.User,
-		Password: config.Postgres.Password,
-		DBName:   config.Postgres.Database,
-	})
+// 	err = seed(ctx, postgres)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// }
 
-	err = migrate(postgres)
-	if err != nil {
-		panic(err)
-	}
+// func migrate(postgres *gorm.DB) error {
+// 	migrator := gormigrate.New(postgres, gormigrate.DefaultOptions, migrations.ModelSchemaList)
 
-	err = seed(ctx, postgres)
-	if err != nil {
-		panic(err)
-	}
-}
+// 	return migrator.Migrate()
+// }
 
-func migrate(postgres *gorm.DB) error {
-	migrator := gormigrate.New(postgres, gormigrate.DefaultOptions, migrations.ModelSchemaList)
+// func seed(ctx context.Context, postgres *gorm.DB) error {
+// 	dir, err := os.Getwd()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return migrator.Migrate()
-}
+// 	bytes, err := ioutil.ReadFile(dir + "/seeds.yml")
+// 	if err != nil {
+// 		return err
+// 	}
 
-func seed(ctx context.Context, postgres *gorm.DB) error {
-	dir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
+// 	var seeds Seeds
 
-	bytes, err := ioutil.ReadFile(dir + "/seeds.yml")
-	if err != nil {
-		return err
-	}
+// 	err = yaml.Unmarshal(bytes, &seeds)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	var seeds Seeds
+// 	userCredentialsRepository := repo.NewUserCredentialsRepository(postgres)
+// 	userRepository := repo.NewUserRepository(postgres, userCredentialsRepository)
+// 	userUsecase := usersUC.NewUserUseCase(userRepository, userCredentialsRepository)
 
-	err = yaml.Unmarshal(bytes, &seeds)
-	if err != nil {
-		return err
-	}
+// 	for _, user := range seeds.Users {
+// 		userExist, _ := userUsecase.GetUser(ctx, usersUC.GetUserParams{
+// 			Email: user.Email,
+// 		})
 
-	userCredentialsRepository := repo.NewUserCredentialsRepository(postgres)
-	userRepository := repo.NewUserRepository(postgres, userCredentialsRepository)
-	userUsecase := usersUC.NewUserUseCase(userRepository, userCredentialsRepository)
+// 		if userExist != nil {
+// 			continue
+// 		}
 
-	for _, user := range seeds.Users {
-		userExist, _ := userUsecase.GetUser(ctx, usersUC.GetUserParams{
-			Email: user.Email,
-		})
+// 		_, err = userUsecase.CreateUser(ctx, usersUC.CreateUserParams{
+// 			Email:    user.Email,
+// 			Password: user.Password,
+// 			Role:     user.Role,
+// 			State:    user.State,
+// 			Level:    user.Level,
+// 		})
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
 
-		if userExist != nil {
-			continue
-		}
-
-		_, err = userUsecase.CreateUser(ctx, usersUC.CreateUserParams{
-			Email:    user.Email,
-			Password: user.Password,
-			Role:     user.Role,
-			State:    user.State,
-			Level:    user.Level,
-		})
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
+// 	return nil
+// }

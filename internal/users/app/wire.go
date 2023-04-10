@@ -7,19 +7,16 @@ import (
 	"context"
 
 	"github.com/google/wire"
-	"github.com/looplab/eventhorizon/eventbus/nats"
-	"github.com/looplab/eventhorizon/eventstore/mongodb"
-	mongoOutbox "github.com/looplab/eventhorizon/outbox/mongodb"
-	"github.com/zsmartex/pkg/v3/infrastucture/database"
+	eh "github.com/looplab/eventhorizon"
 	"github.com/zsmartex/pkg/v3/infrastucture/redis"
 	"github.com/zsmartex/zsmartex/cmd/users/config"
 	"github.com/zsmartex/zsmartex/internal/users/app/router"
-	"github.com/zsmartex/zsmartex/internal/users/infras/repo"
-	usersUC "github.com/zsmartex/zsmartex/internal/users/usecases/users"
+	"github.com/zsmartex/zsmartex/internal/users/domain"
+	"github.com/zsmartex/zsmartex/internal/users/domain/projections"
+	"github.com/zsmartex/zsmartex/pkg/eventhorizon"
 	"github.com/zsmartex/zsmartex/pkg/session"
-	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"gorm.io/gorm"
 )
 
 func InitApp(
@@ -30,39 +27,64 @@ func InitApp(
 ) (*App, error) {
 	panic(wire.Build(
 		New,
-		postgresFunc,
-		mongoFunc,
-		eventStoreFunc,
-		eventBusFunc,
 		session.NewStore,
-		repo.RepositorySet,
-		usersUC.UseCaseSet,
+		eventhorizonUserSetup,
+		eventhorizonActivitySetup,
 		router.ProductGRPCServerSet,
 	))
 }
 
-func postgresFunc(config *config.Config) (*gorm.DB, error) {
-	return database.New(&database.Config{
-		Host:     config.Postgres.Host,
-		Port:     config.Postgres.Port,
-		User:     config.Postgres.User,
-		Password: config.Postgres.Password,
-		DBName:   config.Postgres.Database,
-	})
+type UserEventHorizon struct {
 }
 
-func mongoFunc(config *config.Config) (*mongo.Client, error) {
-	return mongo.NewClient()
+func eventhorizonUserSetup(
+	ctx context.Context,
+	config *config.Config,
+	logger *zap.Logger,
+) (*eventhorizon.EventHorizon, error) {
+	return eventhorizon.New(
+		ctx,
+		config.Mongo,
+		config.Nats,
+		projections.NewUserProjector(logger),
+		eventhorizon.EventHorizonRepoTypeVersion,
+		domain.UserAggregateType,
+		[]eh.EventType{
+			domain.UserCreatedEvent,
+			domain.UserUpdatedEvent,
+			domain.UserLabelAppliedEvent,
+			domain.UserLabelDestroyedEvent,
+			domain.UserDataUpdatedEvent,
+		},
+		[]eh.CommandType{
+			domain.UserCreateCommand,
+			domain.UserUpdateCommand,
+			domain.UserLabelApplyCommand,
+			domain.UserLabelDestroyCommand,
+			domain.UserDataUpdateCommand,
+		},
+		logger,
+	)
 }
 
-func eventStoreFunc(client *mongo.Client) (*mongodb.EventStore, error) {
-	return mongodb.NewEventStoreWithClient(client, "user_events")
-}
-
-func eventBusFunc(config *config.Config) (*nats.EventBus, error) {
-	return nats.NewEventBus(config.Nats.URI, "user")
-}
-
-func outBoxFunc(client *mongo.Client) (*mongoOutbox.Outbox, error) {
-	return mongoOutbox.NewOutboxWithClient(client, "user_events")
+func eventhorizonActivitySetup(
+	ctx context.Context,
+	config *config.Config,
+	logger *zap.Logger,
+) (*eventhorizon.EventHorizon, error) {
+	return eventhorizon.New(
+		ctx,
+		config.Mongo,
+		config.Nats,
+		projections.NewUserProjector(logger),
+		eventhorizon.EventHorizonRepoTypeTracing,
+		domain.ActivityAggregateType,
+		[]eh.EventType{
+			domain.ActivityCreatedEvent,
+		},
+		[]eh.CommandType{
+			domain.ActivityCreateCommand,
+		},
+		logger,
+	)
 }

@@ -10,7 +10,6 @@ import (
 )
 
 var _ = eh.Entity(&Activity{})
-var _ = eh.Versionable(&Activity{})
 
 type Activity struct {
 	ID            uuid.UUID              `json:"id" bson:"_id"`
@@ -33,10 +32,4 @@ type Activity struct {
 // EntityID implements the EntityID method of the eventhorizon.Entity interface.
 func (t *Activity) EntityID() uuid.UUID {
 	return t.ID
-}
-
-// AggregateVersion implements the AggregateVersion method of the
-// eventhorizon.Versionable interface.
-func (t *Activity) AggregateVersion() int {
-	return t.Version
 }

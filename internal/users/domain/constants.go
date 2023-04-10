@@ -3,8 +3,8 @@ package domain
 import eh "github.com/looplab/eventhorizon"
 
 const (
-	UserAggregateType     eh.AggregateType = "user"
-	ActivityAggregateType eh.AggregateType = "activity"
+	UserAggregateType     eh.AggregateType = "users"
+	ActivityAggregateType eh.AggregateType = "activities"
 )
 
 // Commands.
