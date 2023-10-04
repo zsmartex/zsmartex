@@ -2,8 +2,7 @@ syntax = "proto3";
 
 package api.user.v1;
 
-import "common/user/v1/user.proto";
-import "common/code/v1/code.proto";
+import "entpb/entpb.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
@@ -25,7 +24,7 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  common.user.v1.User user = 1;
+  entpb.User user = 1;
 }
 
 message ConfirmRequest {
@@ -34,7 +33,7 @@ message ConfirmRequest {
 }
 
 message ConfirmResponse {
-  common.user.v1.User user = 1;
+  entpb.User user = 1;
 }
 
 message LoginRequest {
@@ -44,7 +43,7 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  common.user.v1.User user = 1;
+  entpb.User user = 1;
 }
 
 message GenerateCodeRegisterRequest {
