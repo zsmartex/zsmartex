@@ -1,0 +1,139 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "entpb/entpb.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "UserService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "UserRole": {
+      "type": "string",
+      "enum": [
+        "ROLE_MEMBER",
+        "ROLE_ADMIN"
+      ],
+      "default": "ROLE_MEMBER"
+    },
+    "entpbBatchCreateUsersResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/entpbUser"
+          }
+        }
+      }
+    },
+    "entpbCreateUserRequest": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/entpbUser"
+        }
+      }
+    },
+    "entpbGetUserRequestView": {
+      "type": "string",
+      "enum": [
+        "VIEW_UNSPECIFIED",
+        "BASIC",
+        "WITH_EDGE_IDS"
+      ],
+      "default": "VIEW_UNSPECIFIED"
+    },
+    "entpbListUserRequestView": {
+      "type": "string",
+      "enum": [
+        "VIEW_UNSPECIFIED",
+        "BASIC",
+        "WITH_EDGE_IDS"
+      ],
+      "default": "VIEW_UNSPECIFIED"
+    },
+    "entpbListUserResponse": {
+      "type": "object",
+      "properties": {
+        "userList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/entpbUser"
+          }
+        },
+        "nextPageToken": {
+          "type": "string"
+        }
+      }
+    },
+    "entpbUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "byte"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/UserRole"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
