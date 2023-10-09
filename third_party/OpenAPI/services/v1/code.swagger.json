@@ -20,68 +20,9 @@
     "CodeCategory": {
       "type": "string",
       "enum": [
-        "CATEGORY_UNKNOWN",
-        "CATEGORY_REGISTER",
-        "CATEGORY_RESET_PASSWORD",
-        "CATEGORY_LOGIN"
+        "CATEGORY_UNKNOWN"
       ],
       "default": "CATEGORY_UNKNOWN"
-    },
-    "entpbCode": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "byte"
-        },
-        "userId": {
-          "type": "string"
-        },
-        "code": {
-          "type": "string"
-        },
-        "type": {
-          "$ref": "#/definitions/entpbCodeType"
-        },
-        "category": {
-          "$ref": "#/definitions/CodeCategory"
-        },
-        "emailIndex": {
-          "type": "string",
-          "format": "int64"
-        },
-        "emailEncrypted": {
-          "type": "string"
-        },
-        "phoneIndex": {
-          "type": "string",
-          "format": "int64"
-        },
-        "phoneEncrypted": {
-          "type": "string"
-        },
-        "data": {
-          "type": "string",
-          "format": "byte"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "entpbCodeType": {
-      "type": "string",
-      "enum": [
-        "TYPE_UNKNOWN",
-        "TYPE_EMAIL",
-        "TYPE_PHONE"
-      ],
-      "default": "TYPE_UNKNOWN"
     },
     "protobufAny": {
       "type": "object",
@@ -118,7 +59,7 @@
           "type": "string"
         },
         "codeType": {
-          "$ref": "#/definitions/entpbCodeType"
+          "$ref": "#/definitions/v1CodeType"
         },
         "codeCategory": {
           "$ref": "#/definitions/CodeCategory"
@@ -132,16 +73,52 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/entpbCode"
+            "$ref": "#/definitions/v1Code"
           }
         }
       }
+    },
+    "v1Code": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/v1CodeType"
+        },
+        "category": {
+          "$ref": "#/definitions/CodeCategory"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "v1CodeType": {
+      "type": "string",
+      "enum": [
+        "TYPE_UNKNOWN",
+        "TYPE_EMAIL",
+        "TYPE_PASSWORD"
+      ],
+      "default": "TYPE_UNKNOWN"
     },
     "v1GenerateCodeResponse": {
       "type": "object",
       "properties": {
         "code": {
-          "$ref": "#/definitions/entpbCode"
+          "type": "string"
         }
       }
     },
@@ -149,7 +126,7 @@
       "type": "object",
       "properties": {
         "code": {
-          "$ref": "#/definitions/entpbCode"
+          "type": "string"
         }
       }
     },
@@ -160,10 +137,10 @@
           "type": "string"
         },
         "codeType": {
-          "$ref": "#/definitions/entpbCodeType"
+          "type": "string"
         },
         "codeCategory": {
-          "$ref": "#/definitions/CodeCategory"
+          "type": "string"
         }
       }
     },
@@ -174,7 +151,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/entpbCode"
+            "$ref": "#/definitions/v1Code"
           }
         }
       }

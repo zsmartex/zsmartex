@@ -2,35 +2,35 @@ syntax = "proto3";
 
 package services.v1;
 
-import "entpb/entpb.proto";
+import "common/v1/code.proto";
 
 option go_package = "github.com/zsmartex/zsmartex/proto/services/v1;servicesv1";
 
 message GetPendingCodeRequest {
   string uid = 1;
-  entpb.Code.Type code_type = 2;
-  entpb.Code.Category code_category = 3;
+  common.v1.Code.Type code_type = 2;
+  common.v1.Code.Category code_category = 3;
 }
 
 message GetPendingCodeResponse {
-  entpb.Code code = 1;
+  string code = 1;
 }
 
 message GenerateCodeRequest {
   string uid = 1;
-  entpb.Code.Type code_type = 2;
-  entpb.Code.Category code_category = 3;
+  common.v1.Code.Type code_type = 2;
+  common.v1.Code.Category code_category = 3;
   bytes data = 4;
 }
 
 message GenerateCodeResponse {
-  entpb.Code code = 1;
+  string code = 1;
 }
 
 message CheckCodeRequest {
   string uid = 1;
-  entpb.Code.Type code_type = 2;
-  entpb.Code.Category code_category = 3;
+  common.v1.Code.Type code_type = 2;
+  common.v1.Code.Category code_category = 3;
 }
 
 message CheckCodesRequest {
@@ -38,13 +38,13 @@ message CheckCodesRequest {
 }
 
 message CheckCodesResponse {
-  repeated entpb.Code codes = 1;
+  repeated common.v1.Code codes = 1;
 }
 
 message ValidateCodeRequest {
   string uid = 1;
-  entpb.Code.Type code_type = 2;
-  entpb.Code.Category code_category = 3;
+  string code_type = 2;
+  string code_category = 3;
 }
 
 message ValidateCodesRequest {
@@ -52,7 +52,7 @@ message ValidateCodesRequest {
 }
 
 message ValidateCodesResponse {
-  repeated entpb.Code codes = 1;
+  repeated common.v1.Code codes = 1;
 }
 
 service CodeService {

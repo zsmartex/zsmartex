@@ -25,9 +25,9 @@
         "operationId": "UserService_Login",
         "responses": {
           "200": {
-            "description": "",
+            "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/entpbUser"
+              "$ref": "#/definitions/v1LoginResponse"
             }
           },
           "default": {
@@ -81,9 +81,9 @@
         "operationId": "UserService_Register",
         "responses": {
           "200": {
-            "description": "",
+            "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/entpbUser"
+              "$ref": "#/definitions/v1RegisterResponse"
             }
           },
           "default": {
@@ -114,9 +114,9 @@
         "operationId": "UserService_Confirm",
         "responses": {
           "200": {
-            "description": "",
+            "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/entpbUser"
+              "$ref": "#/definitions/v1ConfirmResponse"
             }
           },
           "default": {
@@ -174,43 +174,6 @@
     }
   },
   "definitions": {
-    "UserRole": {
-      "type": "string",
-      "enum": [
-        "ROLE_MEMBER",
-        "ROLE_ADMIN"
-      ],
-      "default": "ROLE_MEMBER"
-    },
-    "entpbUser": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "byte"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "role": {
-          "$ref": "#/definitions/UserRole"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -253,8 +216,14 @@
     "v1ConfirmResponse": {
       "type": "object",
       "properties": {
-        "user": {
-          "$ref": "#/definitions/entpbUser"
+        "uid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
         }
       }
     },
@@ -281,8 +250,17 @@
     "v1LoginResponse": {
       "type": "object",
       "properties": {
-        "user": {
-          "$ref": "#/definitions/entpbUser"
+        "uid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
         }
       }
     },
@@ -303,8 +281,14 @@
     "v1RegisterResponse": {
       "type": "object",
       "properties": {
-        "user": {
-          "$ref": "#/definitions/entpbUser"
+        "uid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
         }
       }
     }
