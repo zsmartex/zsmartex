@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package api.user.v1;
 
-import "entpb/entpb.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
@@ -24,7 +23,9 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  entpb.User user = 1;
+  string uid = 1;
+  string email = 2;
+  string role = 3;
 }
 
 message ConfirmRequest {
@@ -33,7 +34,9 @@ message ConfirmRequest {
 }
 
 message ConfirmResponse {
-  entpb.User user = 1;
+  string uid = 1;
+  string email = 2;
+  string role = 3;
 }
 
 message LoginRequest {
@@ -43,7 +46,10 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  entpb.User user = 1;
+  string uid = 1;
+  string email = 2;
+  string role = 3;
+  string state = 4;
 }
 
 message GenerateCodeRegisterRequest {
@@ -60,7 +66,6 @@ service UserService {
     option (google.api.http) = {
       post: "/api/v1/identity/users"
       body: "*"
-      response_body: "user"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Register a user"
@@ -71,7 +76,6 @@ service UserService {
     option (google.api.http) = {
       post: "/api/v1/identity/users/confirm"
       body: "*"
-      response_body: "user"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Confirm pending user"
@@ -82,7 +86,6 @@ service UserService {
     option (google.api.http) = {
       post: "/api/v1/identity/sessions"
       body: "*"
-      response_body: "user"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Login to user service"
