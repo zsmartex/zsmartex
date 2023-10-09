@@ -9,3 +9,17 @@ Why open source?
 - Paid for support
 - Improving my CV
 - Challenging to be a real senior with solo project using CQRS and many things
+
+Features planned (User side):
+- Login
+- Register
+- Forgot Passowrd
+- Reset Password
+- Change Password
+- Deposit
+- Withdraw
+- OTP
+- KYC
+- Spot
+- Futures
+- Much more...
