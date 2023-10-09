@@ -80,17 +80,16 @@ func (c *codeServiceClient) ValidateCodes(ctx context.Context, in *ValidateCodes
 }
 
 // CodeServiceServer is the server API for CodeService service.
-// All implementations must embed UnimplementedCodeServiceServer
+// All implementations should embed UnimplementedCodeServiceServer
 // for forward compatibility
 type CodeServiceServer interface {
 	GetPendingCode(context.Context, *GetPendingCodeRequest) (*GetPendingCodeResponse, error)
 	GenerateCode(context.Context, *GenerateCodeRequest) (*GenerateCodeResponse, error)
 	CheckCodes(context.Context, *CheckCodesRequest) (*CheckCodesResponse, error)
 	ValidateCodes(context.Context, *ValidateCodesRequest) (*ValidateCodesResponse, error)
-	mustEmbedUnimplementedCodeServiceServer()
 }
 
-// UnimplementedCodeServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedCodeServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedCodeServiceServer struct {
 }
 
@@ -106,7 +105,6 @@ func (UnimplementedCodeServiceServer) CheckCodes(context.Context, *CheckCodesReq
 func (UnimplementedCodeServiceServer) ValidateCodes(context.Context, *ValidateCodesRequest) (*ValidateCodesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateCodes not implemented")
 }
-func (UnimplementedCodeServiceServer) mustEmbedUnimplementedCodeServiceServer() {}
 
 // UnsafeCodeServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to CodeServiceServer will

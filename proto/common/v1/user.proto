@@ -2,13 +2,26 @@ syntax = "proto3";
 
 package common.v1;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "github.com/zsmartex/zsmartex/proto/common/v1;commonv1";
+
+
+message UserLabel {
+  string key = 1;
+  string value = 2;
+  string scope = 3;
+}
 
 message User {
   string id = 1;
-  string email = 2;
-  Role role = 3;
-  State state = 4;
+  string uid = 2;
+  string email = 3;
+  Role role = 4;
+  State state = 5;
+  repeated UserLabel labels = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
 
   enum Role {
     ROLE_UNKNOWN = 0;

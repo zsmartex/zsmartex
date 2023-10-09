@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package services.v1;
+
+import "common/v1/user.proto";
+
+option go_package = "github.com/zsmartex/zsmartex/proto/services/v1;servicesv1";
+
+message GetUserRequest {
+  string query_by = 1;
+  string query_value = 2;
+}
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (common.v1.User);
+}

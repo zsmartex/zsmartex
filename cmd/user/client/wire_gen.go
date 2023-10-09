@@ -9,6 +9,7 @@ package main
 import (
 	"context"
 	"github.com/zsmartex/zsmartex/cmd/user/config"
+	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
 	"github.com/zsmartex/zsmartex/internal/user/router"
 	"github.com/zsmartex/zsmartex/internal/user/usecases"
 	"github.com/zsmartex/zsmartex/pkg/mongodb"
@@ -33,7 +34,8 @@ func InitApp(ctx context.Context, cfg *config.Config, opts []grpc.DialOption) (*
 		cleanup()
 		return nil, nil, err
 	}
-	userUsecase := usecases.NewUserUsecase(ctx, commandBus, client)
+	userRepo := repo.NewUserRepo(ctx, client)
+	userUsecase := usecases.NewUserUsecase(ctx, commandBus, userRepo)
 	userServiceServer := router.NewUserServiceServer(userUsecase)
 	server := NewGRPCServer(userServiceServer)
 	configGRPC := cfg.GRPC

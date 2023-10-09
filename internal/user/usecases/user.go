@@ -10,73 +10,57 @@ import (
 	"github.com/zsmartex/zsmartex/internal/user/commands"
 	"github.com/zsmartex/zsmartex/internal/user/domain"
 	"github.com/zsmartex/zsmartex/internal/user/handlers"
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var _ UserUsecase = (*userUsecase)(nil)
 
 type userUsecase struct {
-	commandBus      command.Bus
-	usersCollection *mongo.Collection
+	commandBus command.Bus
+	userRepo   repo.UserRepo
 }
 
 func NewUserUsecase(
 	ctx context.Context,
 	commandBus command.Bus,
-	mongoClient *mongo.Client,
+	userRepo repo.UserRepo,
 ) UserUsecase {
-	usersCollection := mongoClient.Database("user").Collection("users")
-
-	usersCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
-		{
-			Keys: bson.M{
-				"email": 1,
-			},
-			Options: options.Index().SetUnique(true),
-		},
-		{
-			Keys: bson.M{
-				"uid": 1,
-			},
-			Options: options.Index().SetUnique(true),
-		},
-	})
-
 	return &userUsecase{
-		commandBus:      commandBus,
-		usersCollection: usersCollection,
+		commandBus: commandBus,
+		userRepo:   userRepo,
 	}
 }
 
 func (u *userUsecase) emailExist(ctx context.Context, email string) (found bool, err error) {
-	userEmailFilter := bson.M{"email": email}
-	userEmailExists := u.usersCollection.FindOne(ctx, userEmailFilter)
-	if errors.Is(userEmailExists.Err(), mongo.ErrNoDocuments) {
+	_, err = u.userRepo.GetUser(ctx, "email", email)
+	if errors.Is(err, mongo.ErrNoDocuments) {
 		return false, nil
 	}
 
-	if userEmailExists.Err() != nil {
-		return false, errors.Cause(userEmailExists.Err())
+	if err != nil {
+		return false, err
 	}
 
 	return true, nil
 }
 
 func (u *userUsecase) UserExists(ctx context.Context, uid string) (found bool, err error) {
-	userUIDFilter := bson.M{"uid": uid}
-	userUIDExists := u.usersCollection.FindOne(ctx, userUIDFilter)
-	if errors.Is(userUIDExists.Err(), mongo.ErrNoDocuments) {
+	_, err = u.userRepo.GetUser(ctx, "uid", uid)
+	if errors.Is(err, mongo.ErrNoDocuments) {
 		return false, nil
 	}
 
-	if userUIDExists.Err() != nil {
-		return false, errors.Cause(userUIDExists.Err())
+	if err != nil {
+		return false, err
 	}
 
 	return true, nil
+}
+
+func (u *userUsecase) GetUser(ctx context.Context, queryBy, queryValue string) (*domain.User, error) {
+	return u.userRepo.GetUser(ctx, queryBy, queryValue)
 }
 
 func (u *userUsecase) RegisterUser(ctx context.Context, email string, password string) (*domain.User, error) {

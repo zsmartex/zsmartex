@@ -7,7 +7,7 @@ import "common/v1/code.proto";
 option go_package = "github.com/zsmartex/zsmartex/proto/services/v1;servicesv1";
 
 message GetPendingCodeRequest {
-  string uid = 1;
+  string user_id = 1;
   common.v1.Code.Type code_type = 2;
   common.v1.Code.Category code_category = 3;
 }
@@ -17,7 +17,7 @@ message GetPendingCodeResponse {
 }
 
 message GenerateCodeRequest {
-  string uid = 1;
+  string user_id = 1;
   common.v1.Code.Type code_type = 2;
   common.v1.Code.Category code_category = 3;
   bytes data = 4;
@@ -28,7 +28,7 @@ message GenerateCodeResponse {
 }
 
 message CheckCodeRequest {
-  string uid = 1;
+  string user_id = 1;
   common.v1.Code.Type code_type = 2;
   common.v1.Code.Category code_category = 3;
 }
@@ -42,7 +42,7 @@ message CheckCodesResponse {
 }
 
 message ValidateCodeRequest {
-  string uid = 1;
+  string user_id = 1;
   string code_type = 2;
   string code_category = 3;
 }

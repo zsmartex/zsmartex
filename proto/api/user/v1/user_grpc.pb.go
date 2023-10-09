@@ -91,7 +91,7 @@ func (c *userServiceClient) GenerateCodeLogin(ctx context.Context, in *GenerateC
 }
 
 // UserServiceServer is the server API for UserService service.
-// All implementations must embed UnimplementedUserServiceServer
+// All implementations should embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
@@ -99,10 +99,9 @@ type UserServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	GenerateCodeRegister(context.Context, *GenerateCodeRegisterRequest) (*GenerateCodeRegisterResponse, error)
 	GenerateCodeLogin(context.Context, *GenerateCodeLoginRequest) (*GenerateCodeLoginResponse, error)
-	mustEmbedUnimplementedUserServiceServer()
 }
 
-// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedUserServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedUserServiceServer struct {
 }
 
@@ -121,7 +120,6 @@ func (UnimplementedUserServiceServer) GenerateCodeRegister(context.Context, *Gen
 func (UnimplementedUserServiceServer) GenerateCodeLogin(context.Context, *GenerateCodeLoginRequest) (*GenerateCodeLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenerateCodeLogin not implemented")
 }
-func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
 // UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to UserServiceServer will

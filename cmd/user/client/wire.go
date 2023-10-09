@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/wire"
 	"github.com/zsmartex/zsmartex/cmd/user/config"
+	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
 	"github.com/zsmartex/zsmartex/internal/user/router"
 	"github.com/zsmartex/zsmartex/internal/user/usecases"
 	"github.com/zsmartex/zsmartex/pkg/mongodb"
@@ -27,6 +28,7 @@ func InitApp(
 			wire.FieldsOf(new(*config.Config), "MongoDB"),
 		),
 		usecases.Set,
+		repo.NewUserRepo,
 		router.NewUserServiceServer,
 		NewGRPCServer,
 		wire.NewSet(

@@ -6,18 +6,14 @@ import (
 	"github.com/zsmartex/zsmartex/pkg/setup"
 )
 
-type EventType string
-
 const (
-	UserCreated EventType = "user.created"
+	UserCreated = "user.created"
 )
 
-// ListEvents are all events of a todo list.
 var ListEvents = []string{
 	string(UserCreated),
 }
 
-// RegisterEvents registers events into a registry.
 func RegisterEvents(r setup.EventRegistry) {
 	codec.Register[UserCreatedData](r, string(UserCreated))
 }

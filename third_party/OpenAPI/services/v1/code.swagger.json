@@ -20,7 +20,9 @@
     "CodeCategory": {
       "type": "string",
       "enum": [
-        "CATEGORY_UNKNOWN"
+        "CATEGORY_UNKNOWN",
+        "CATEGORY_CONFIRM",
+        "CATEGORY_LOGIN"
       ],
       "default": "CATEGORY_UNKNOWN"
     },
@@ -55,7 +57,7 @@
     "v1CheckCodeRequest": {
       "type": "object",
       "properties": {
-        "uid": {
+        "userId": {
           "type": "string"
         },
         "codeType": {
@@ -110,7 +112,7 @@
       "enum": [
         "TYPE_UNKNOWN",
         "TYPE_EMAIL",
-        "TYPE_PASSWORD"
+        "TYPE_PHONE"
       ],
       "default": "TYPE_UNKNOWN"
     },
@@ -133,7 +135,7 @@
     "v1ValidateCodeRequest": {
       "type": "object",
       "properties": {
-        "uid": {
+        "userId": {
           "type": "string"
         },
         "codeType": {

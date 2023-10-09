@@ -33,7 +33,7 @@ func customErrorHandler(ctx context.Context, req interface{}, info *grpc.UnarySe
 	return resp, nil
 }
 
-func NewGRPCServer(userServiceServer *router.UserServiceServer) *grpc.Server {
+func NewGRPCServer(userServiceServer router.UserServiceServer) *grpc.Server {
 	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(customErrorHandler))
 	userv1.RegisterUserServiceServer(grpcServer, userServiceServer)
 

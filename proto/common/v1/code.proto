@@ -18,10 +18,12 @@ message Code {
   enum Type {
     TYPE_UNKNOWN = 0;
     TYPE_EMAIL = 1;
-    TYPE_PASSWORD = 2;
+    TYPE_PHONE = 2;
   }
 
   enum Category {
     CATEGORY_UNKNOWN = 0;
+    CATEGORY_CONFIRM = 1;
+    CATEGORY_LOGIN = 2;
   }
 }
