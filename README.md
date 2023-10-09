@@ -8,3 +8,4 @@ Why open source?
 - Selling frontend for ZSmartex
 - Paid for support
 - Improving my CV
+- Challenging to be a real senior with solo project using CQRS and many things
