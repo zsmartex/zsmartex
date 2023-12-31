@@ -2,11 +2,31 @@ package router
 
 import (
 	"context"
+	"errors"
 
-	"github.com/zsmartex/zsmartex/internal/user/usecases"
+	"github.com/ThreeDotsLabs/watermill/components/cqrs"
+	"github.com/google/uuid"
+	"github.com/zsmartex/pkg/v2/utils"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/fx"
+	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	"github.com/zsmartex/zsmartex/internal/user/commands"
+	"github.com/zsmartex/zsmartex/internal/user/domain"
+	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
 	userv1 "github.com/zsmartex/zsmartex/proto/api/user/v1"
 	commonv1 "github.com/zsmartex/zsmartex/proto/common/v1"
 	servicesv1 "github.com/zsmartex/zsmartex/proto/services/v1"
+)
+
+var Module = fx.Module(
+	"router.Module",
+	fx.Provide(
+		NewUserServiceServer,
+	),
+	fx.Invoke(registerRouterHooks),
 )
 
 var _ userv1.UserServiceServer = (*userServiceServer)(nil)
@@ -18,36 +38,57 @@ type UserServiceServer interface {
 }
 
 type userServiceServer struct {
-	userUsecase usecases.UserUsecase
+	commandBus *cqrs.CommandBus
+	readRepo   repo.ReadRepo
 }
 
-func NewUserServiceServer(
-	userUsecase usecases.UserUsecase,
-) UserServiceServer {
+func NewUserServiceServer(commandBus *cqrs.CommandBus, readRepo repo.ReadRepo) UserServiceServer {
 	return &userServiceServer{
-		userUsecase: userUsecase,
+		commandBus: commandBus,
+		readRepo:   readRepo,
 	}
 }
 
 func (s *userServiceServer) GetUser(ctx context.Context, req *servicesv1.GetUserRequest) (*commonv1.User, error) {
-	user, err := s.userUsecase.GetUser(ctx, req.QueryBy, req.QueryValue)
+	return &commonv1.User{}, nil
+}
+
+func (s *userServiceServer) Register(ctx context.Context, req *userv1.RegisterRequest) (*userv1.RegisterResponse, error) {
+	id := uuid.New()
+	uid := utils.GenerateUID()
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
 
-	return user.ProtobufValue(), err
-}
-
-func (s *userServiceServer) Register(ctx context.Context, req *userv1.RegisterRequest) (*userv1.RegisterResponse, error) {
-	user, err := s.userUsecase.RegisterUser(ctx, req.Email, req.Password)
+	cmd := commands.NewRegisterCommand(id, uid, req.Email, string(hashedPassword))
+	err = s.commandBus.Send(ctx, cmd)
 	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.readRepo.GetUserByUID(ctx, uid)
+	if err == nil {
+		return &userv1.RegisterResponse{}, status.Error(codes.AlreadyExists, "user already exists")
+	}
+	if !errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, err
+	}
+
+	_, err = s.readRepo.GetUserByEmail(ctx, req.Email)
+	if err == nil {
+		return &userv1.RegisterResponse{}, status.Error(codes.AlreadyExists, "user already exists")
+	}
+	if !errors.Is(err, mongo.ErrNoDocuments) {
 		return nil, err
 	}
 
 	return &userv1.RegisterResponse{
-		Uid:   user.UID,
+		Uid:   uid,
 		Email: req.Email,
-		Role:  string(user.Role),
+		Role:  string(domain.DefaultRole()),
+		State: string(domain.DefaultState()),
 	}, nil
 }
 

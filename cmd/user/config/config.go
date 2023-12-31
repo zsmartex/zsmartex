@@ -1,28 +1,32 @@
 package config
 
 import (
-	"fmt"
+	"github.com/caarlos0/env/v10"
+	"go.uber.org/fx"
 
-	"github.com/caarlos0/env/v9"
 	"github.com/zsmartex/zsmartex/pkg/config"
 )
 
-type (
-	Config struct {
-		config.App
-		config.HTTP
-		config.GRPC
-		MongoDB    config.MongoDB    `envPrefix:"MONGODB_"`
-		EventStore config.EventStore `envPrefix:"EVENTSTORE_"`
-		EventBus   config.EventBus   `envPrefix:"EVENTBUS_"`
-	}
+var Module = fx.Module(
+	"config.Module",
+	fx.Provide(
+		New,
+	),
 )
 
-func New() (*Config, error) {
-	cfg := new(Config)
+type Config struct {
+	fx.Out
 
-	if err := env.Parse(cfg); err != nil {
-		return nil, fmt.Errorf("failed to parse config: %v", err)
+	config.GRPC `envPrefix:"GRPC_"`
+	config.HTTP `envPrefix:"HTTP_"`
+	config.Nats
+	config.MongoDB
+}
+
+func New() (Config, error) {
+	cfg := Config{}
+	if err := env.Parse(&cfg); err != nil {
+		return Config{}, err
 	}
 
 	return cfg, nil

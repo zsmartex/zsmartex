@@ -1,41 +1,41 @@
 package main
 
 import (
-	"fmt"
-	"time"
+	"go.uber.org/fx"
 
-	"github.com/modernice/goes/projection/schedule"
-	"github.com/zsmartex/pkg/v2/log"
 	"github.com/zsmartex/zsmartex/cmd/user/config"
-	"github.com/zsmartex/zsmartex/internal/user/events"
-	"github.com/zsmartex/zsmartex/pkg/logging"
-	"github.com/zsmartex/zsmartex/pkg/setup"
+	"github.com/zsmartex/zsmartex/internal/user/handlers"
+	"github.com/zsmartex/zsmartex/internal/user/infras/repo"
+	"github.com/zsmartex/zsmartex/internal/user/projectors"
+	"github.com/zsmartex/zsmartex/pkg/context_fx"
+	"github.com/zsmartex/zsmartex/pkg/cqrs_fx"
+	"github.com/zsmartex/zsmartex/pkg/logger"
+	"github.com/zsmartex/zsmartex/pkg/mongo_fx"
+	"github.com/zsmartex/zsmartex/pkg/nats_fx"
 )
 
-func init() {
-	log.New("user")
-}
-
 func main() {
-	config, err := config.New()
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	ctx, cancel := setup.Context()
-	defer cancel()
+	app := fx.New(
+		config.Module,
+		nats_fx.Module,
+		logger.Module,
+		context_fx.Module,
+		mongo_fx.Module,
+		repo.CollectionModule,
+		repo.ReadModule,
+		repo.WriteModule,
+		cqrs_fx.LoggerModule,
+		cqrs_fx.PublisherModule,
+		cqrs_fx.SubscriberModule,
+		cqrs_fx.MarshalerModule,
+		cqrs_fx.RouterModule,
+		cqrs_fx.CommandProcessorModule,
+		cqrs_fx.EventBusModule,
+		cqrs_fx.EventProcessorModule,
+		handlers.Module,
+		projectors.Module,
+	)
 
-	app, disconnect, err := InitApp(ctx, config)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer disconnect()
-	protectionErrors, err := setup.Project(ctx, app.userProjection, app.eventBus, app.eventStore, events.ListEvents, schedule.Debounce(1*time.Second))
-	if err != nil {
-		log.Panic(fmt.Errorf("projection: %w", err))
-	}
-
-	commandErrors := app.commandHandler.MustHandle(ctx)
-
-	logging.LogErrors(ctx, protectionErrors, commandErrors)
+	app.Run()
 }

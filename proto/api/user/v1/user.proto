@@ -6,7 +6,6 @@ import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/zsmartex/zsmartex/proto/api/user/v1;userv1";
-
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {version: "1.0"};
   external_docs: {
@@ -26,6 +25,7 @@ message RegisterResponse {
   string uid = 1;
   string email = 2;
   string role = 3;
+  string state = 4;
 }
 
 message ConfirmRequest {
@@ -71,7 +71,7 @@ service UserService {
       summary: "Register a user"
       tags: "Users"
     };
-  };
+  }
   rpc Confirm(ConfirmRequest) returns (ConfirmResponse) {
     option (google.api.http) = {
       post: "/api/v1/identity/users/confirm"
@@ -81,7 +81,7 @@ service UserService {
       summary: "Confirm pending user"
       tags: "Users"
     };
-  };
+  }
   rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/api/v1/identity/sessions"
@@ -91,23 +91,19 @@ service UserService {
       summary: "Login to user service"
       tags: "Users"
     };
-  };
+  }
   rpc GenerateCodeRegister(GenerateCodeRegisterRequest) returns (GenerateCodeRegisterResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/identity/users/generate_code"
-    };
+    option (google.api.http) = {post: "/api/v1/identity/users/generate_code"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Generate register code"
       tags: "Users"
     };
-  };
+  }
   rpc GenerateCodeLogin(GenerateCodeLoginRequest) returns (GenerateCodeLoginResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/identity/sessions/generate_code"
-    };
+    option (google.api.http) = {post: "/api/v1/identity/sessions/generate_code"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Generate login code"
       tags: "Users"
     };
-  };
+  }
 }

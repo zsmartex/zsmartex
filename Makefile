@@ -6,10 +6,6 @@ buf:
 
 generate: buf
 
-wire:
-	@cd cmd/user/client && wire
-	@cd cmd/user/server && wire
-
 backend:
 	docker-compose up -d postgres mongodb mongo-express nats
 

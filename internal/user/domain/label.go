@@ -15,6 +15,10 @@ type Label struct {
 	Scope LabelScope `bson:"scope"`
 }
 
+func (l Label) IsVerified() bool {
+	return l.Value == "verified"
+}
+
 func (label Label) ProtobufValue() *commonv1.UserLabel {
 	return &commonv1.UserLabel{
 		Key:   label.Key,

@@ -54,12 +54,13 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://mongodb:password@mongodb:27017/
 
   nats:
-    image: nats:2
+    image: nats:2.9.24
     restart: always
     ports:
       - 4222:4222
       - 8222:8222
       - 6222:6222
+    command: -js
 
   user-server:
     << : *user-ext
